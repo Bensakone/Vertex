@@ -1,0 +1,49 @@
+***************************************************************************
+***	LIST OF THE FILES INCLUDED IN THE OFFICIAL AND COMPLETE		***
+***	VERTEX DEMO SOURCE PACKAGE					***
+***									***
+***	See the main source file for authors, copyrights, etc.		***
+***************************************************************************
+
+Source files
+
+	SOURCE/VERTEX_1_04.s		- the demo main source
+	SOURCE/PREMESSAGE_01.s		- the startup message writer source
+
+
+Files required to assembly Vertex_1_02.s
+
+	INCLUDE/CUSTOM.I		- names for custom registers
+	INCLUDE/CIA.I			- names for cia registers
+	INCLUDE/MGMACROS.I		- personal macro file
+	INCLUDE/EXEC/EXEC_LIB.I		- exec library offsets (C) by CBM
+	INCLUDE/LIBRARIES/DOS_LIB.I	- dos library offsets (C) by CBM
+
+	EXTERN/THEENDPIENIFONTTI.RAW	- font in the linevector-part
+	EXTERN/FUNNYTEXT2.RAW		- texts in 'love know it and fear'-part
+	EXTERN/RCR.PLASMA.RAW		- the fake plasma effect picture
+	EXTERN/MANDELWRITERFONT.RAW	- font in the mandelwriter-part
+	EXTERN/DICK.RAW			- picture of dick tracy
+	EXTERN/VERTEXENDTEXT22.RAW	- the end texts
+
+	EXTERN/OPENYOUREYESNOW.3DO	- the vector objects of the first part
+	EXTERN/LINE&WILLE.3DO		- the linevector objects
+	EXTERN/VERTEXOBJRESTOF.3DO	- all the rest objects of the demo
+
+	SND/MOD.RESOLUTION2		- the magnificent tune by Dizzy
+
+
+The original iff-ilbm files of the previous binary (.raw) files
+	
+	GFX/LOPPUTEXTFONO00		- font in the linevector-part
+	GFX/FUNNYTEXT2			- texts in 'love know it and fear'-part
+	GFX/RCR.PLASMA.VERTEX		- the fake plasma effect picture
+	GFX/MANDELWRITERFONT		- font in the mandelwriter-part
+	GFX/DICKTRACY			- picture of dick tracy
+	GFX/VERTEX.ENDTEXT2		- the end texts
+
+
+The executable files
+
+	EXE/VERTEX			- the official compiled demo file
+	EXE/PREMESSAGE			- the startup message writer
