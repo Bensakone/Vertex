@@ -109,7 +109,7 @@ RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
 	dw	framepointer
 	dw	MorphValue
 	dl	aloitus
-	dl	YStart
+	dl	Ystart
 
 	dl	BitPlaneAdd
 	dw	PrintSpeed
@@ -902,7 +902,7 @@ int13:	move.l	d0,-(sp)
 vbi_BPV:
 	movem.l d0-a6,-(sp)
 
-	lea	BSS_Stack,a4
+	lea	Bss_Stack,a4
 
 	IF	RMOUSE_PAUSE = 1
 	RightMouse
@@ -1146,7 +1146,7 @@ DrawVectors_BPV:
 	bsr.w	drawline_f_BPV
 	movem.l	(sp)+,d0-d5
 	lea	40(a5),a0
-	bsr	drawline
+	bsr	DrawLine
 	dbf	d7,.drawloop
 	rts
 
@@ -1224,7 +1224,7 @@ drawline_f_BPV:
 vbi_Line:
 	movem.l d0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 	lea	custom,a6
 	
 	IF	RMOUSE_PAUSE = 1
@@ -1406,7 +1406,7 @@ vbi_Line:
 vbi_Wille:
 	movem.l d0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 	lea	custom,a6
 	
 	IF	RMOUSE_PAUSE = 1
@@ -1742,31 +1742,31 @@ drawline_Wille:
 
 	; d0<d2
 
-	cmp.w	MinX(a4),d0
+	cmp.w	minX(a4),d0
 	bhi.s	.d0_not_MinX
-	move.w	d0,MinX(a4)
+	move.w	d0,minX(a4)
 .d0_not_MinX
-	cmp.w	MaxX(a4),d2
+	cmp.w	maxX(a4),d2
 	blo.s	.d2_not_MaxX
-	move.w	d2,MaxX(a4)
+	move.w	d2,maxX(a4)
 .d2_not_MaxX
 
-	cmp.w	MinY(a4),d1
+	cmp.w	minY(a4),d1
 	bhi.s	.d1_not_MinY
-	move.w	d1,MinY(a4)
+	move.w	d1,minY(a4)
 .d1_not_MinY
-	cmp.w	MaxY(a4),d1
+	cmp.w	maxY(a4),d1
 	blo.s	.d1_not_MaxY
-	move.w	d1,MaxY(a4)
+	move.w	d1,maxY(a4)
 .d1_not_MaxY
 
-	cmp.w	MinY(a4),d3
+	cmp.w	minY(a4),d3
 	bhi.s	.d3_not_MinY
-	move.w	d3,MinY(a4)
+	move.w	d3,minY(a4)
 .d3_not_MinY
-	cmp.w	MaxY(a4),d3
+	cmp.w	maxY(a4),d3
 	blo.s	.d3_not_MaxY
-	move.w	d3,MaxY(a4)
+	move.w	d3,maxY(a4)
 .d3_not_MaxY
 
 	moveq	#0,d4
@@ -2042,7 +2042,7 @@ DrawSurfaces:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
-	bsr.w	drawline
+	bsr.w	DrawLine
 	addq.l	#4,a1
 	dbf	d6,.loop2
 	bra.s	.jump1
@@ -2055,7 +2055,7 @@ DrawSurfaces:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
-	bsr.w	drawline
+	bsr.w	DrawLine
 
 	addq.l	#4,a1
 	dbf	d6,.DoNotDraw
@@ -2123,31 +2123,31 @@ DrawLine:
 
 	; d0<d2
 
-	cmp.w	MinX(a4),d0
+	cmp.w	minX(a4),d0
 	bhi.s	.d0_not_MinX
-	move.w	d0,MinX(a4)
+	move.w	d0,minX(a4)
 .d0_not_MinX
-	cmp.w	MaxX(a4),d2
+	cmp.w	maxX(a4),d2
 	blo.s	.d2_not_MaxX
-	move.w	d2,MaxX(a4)
+	move.w	d2,maxX(a4)
 .d2_not_MaxX
 
-	cmp.w	MinY(a4),d1
+	cmp.w	minY(a4),d1
 	bhi.s	.d1_not_MinY
-	move.w	d1,MinY(a4)
+	move.w	d1,minY(a4)
 .d1_not_MinY
-	cmp.w	MaxY(a4),d1
+	cmp.w	maxY(a4),d1
 	blo.s	.d1_not_MaxY
-	move.w	d1,MaxY(a4)
+	move.w	d1,maxY(a4)
 .d1_not_MaxY
 
-	cmp.w	MinY(a4),d3
+	cmp.w	minY(a4),d3
 	bhi.s	.d3_not_MinY
-	move.w	d3,MinY(a4)
+	move.w	d3,minY(a4)
 .d3_not_MinY
-	cmp.w	MaxY(a4),d3
+	cmp.w	maxY(a4),d3
 	blo.s	.d3_not_MaxY
-	move.w	d3,MaxY(a4)
+	move.w	d3,maxY(a4)
 .d3_not_MaxY
 
 	moveq	#0,d4
@@ -2227,7 +2227,7 @@ vbi_FunnyText:
 	movem.l	d0-d7/a0-a6,-(sp)
 
 	lea	custom,a6
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 
 	IF	RMOUSE_PAUSE = 1
 	RightMouse
@@ -2356,7 +2356,7 @@ BlitBob:
 vbi_Vertex:
 	movem.l d0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 
 	IF	RMOUSE_PAUSE = 1
 	RightMouse
@@ -3074,7 +3074,7 @@ FARTHER	= 3
 vbi_Field:
 	movem.l d0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 	lea	custom,a6
 
 	IF	RMOUSE_PAUSE = 1
@@ -3222,7 +3222,7 @@ StarField:
 	add.w	#15,a5
 	add.w	#30,a6
 
-	move.l	buffer(a4),a3
+	move.l	Buffer(a4),a3
 
 	lea	xval,a0
 	lea	yval,a1
@@ -3317,10 +3317,10 @@ StarField:
 *****	muutokset kulmaan ja taulukon aloituskohtaan
 
 	IF	YASTE > 0
-	add.w	#2*YASTE,yangle(a4)
-	cmp.w	#360*2,yangle(a4)
+	add.w	#2*YASTE,Yangle(a4)
+	cmp.w	#360*2,Yangle(a4)
 	blo.s	.yok
-	move.w	#0,yangle(a4)
+	move.w	#0,Yangle(a4)
 .yok
 	ENDC
 
@@ -3336,13 +3336,13 @@ StarField:
 
 
 RotateBuffers_Field:
-	move.l	buffer(a4),d0
+	move.l	Buffer(a4),d0
 	move.l	clearbuffer(a4),d1
 	move.l	Active(a4),d2
 
 	move.l	d0,Active(a4)
 	move.l	d2,clearbuffer(a4)
-	move.l	d1,buffer(a4)
+	move.l	d1,Buffer(a4)
 
 	lea	Planes_Field,a1
 
@@ -3388,7 +3388,7 @@ RotateBuffers_Field:
 vbi_Plasma:
 	movem.l d0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 	lea	custom,a6
 
 	IF	RMOUSE_PAUSE = 1
@@ -3497,7 +3497,7 @@ CycleColors:
 vbi_FillIcos:
 	movem.l d0-d7/a0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 	lea	custom,a6
 	
 	IF	RMOUSE_PAUSE = 1
@@ -3515,7 +3515,7 @@ vbi_FillIcos:
 	moveq	#3-1,d1
 	bsr.w	SetPlanes
 
-	move.l	buffer(a4),d0
+	move.l	Buffer(a4),d0
 	moveq	#0,d1
 	move.w	minYOLD(a4),d1
 	mulu	#40*3,d1
@@ -3744,7 +3744,7 @@ DrawSurfaces_FWille:
 
 	move.w	d0,a5
 
-.loop2:	move.l	buffer(a4),a0
+.loop2:	move.l	Buffer(a4),a0
 	move.w	a5,d0
 	btst	#0,d0
 	beq.s	.yli1
@@ -3771,7 +3771,7 @@ DrawSurfaces_FWille:
 	move.w	a5,d0
 	btst	#2,d0
 	beq.s	.yli3
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	add.l	#80,a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
@@ -3809,7 +3809,7 @@ DrawSurfaces_FillIcos:
 	move.w	(a1)+,a5		; väri
 	cmp.w	#0,(a3)+		; piirretäänkö?
 	bge.w	.DoNotDraw		; eipä ole näkyvissä
-.loop2:	move.l	buffer(a4),a0
+.loop2:	move.l	Buffer(a4),a0
 	move.w	a5,d0
 	btst	#0,d0
 	beq.s	.yli1
@@ -3867,7 +3867,7 @@ FillScreen_3bpl:
 	asr.w	#1,d1
 	or.w	d1,d2		; bltsize
 
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	move.w	maxY(a4),d0	; maxY
 	mulu	#40*3,d0
 	ext.l	d4
@@ -3993,7 +3993,7 @@ drawline_FillIcos:
 vbi_Writer:
 	movem.l	d0-d7/a0-a6,-(sp)
 	lea	custom,a6
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 
 	IF	RMOUSE_PAUSE = 1
 	RightMouse
@@ -4099,7 +4099,7 @@ Writer:
 	moveq	#0,d0
 .NoMess:
 	add.w	d0,d0
-	lea	writerFonts,a1
+	lea	WriterFonts,a1
 	add.w	d0,a1
 
 
@@ -4178,7 +4178,7 @@ MANDELMODULO	= $10000000	; for 3 bit integer 13 bit fractional
 
 Mandelbrot:
 	tst.w	mandelstart(a4)
-	beq.s	MandelBrot
+	beq.s	Mandelbrot
 
 	lea	plane2,a0
 	moveq	#0,d4
@@ -4296,7 +4296,7 @@ new_x_position:
 vbi_Slime:
 	movem.l d0-d7/a0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 	lea	custom,a6
 	
 	IF	RMOUSE_PAUSE = 1
@@ -4314,7 +4314,7 @@ vbi_Slime:
 	moveq	#3-1,d1
 	bsr.w	SetPlanes
 
-	move.l	buffer(a4),d0
+	move.l	Buffer(a4),d0
 	moveq	#0,d1
 	move.w	minYOLD(a4),d1
 	mulu	#40*3,d1
@@ -4368,7 +4368,7 @@ vbi_Slime:
 	bsr	Varistys
 
 	lea	Sine,a0
-	addq.l	#2,YStart(a4)
+	addq.l	#2,Ystart(a4)
 	add.l	Ystart(a4),a0
 	move.w	(a0),d0
 	cmp.w	#$1234,d0
@@ -4482,7 +4482,7 @@ Varistys:
 	cmp.w	#$1234,d2
 	bne.s	.yli2
 	lea	Sine,a0
-;	clr.l	YStart(a4)
+;	clr.l	Ystart(a4)
 ;	add.l	Ystart(a4),a0
 	move.w	(a0)+,d2
 .yli2
@@ -4535,7 +4535,7 @@ DrawSurfaces_Slime:
 	move.w	(a1)+,a5		; väri
 	cmp.w	#0,(a3)+		; piirretäänkö?
 	bge.w	.DoNotDraw		; eipä ole näkyvissä
-.loop2:	move.l	buffer(a4),a0
+.loop2:	move.l	Buffer(a4),a0
 	move.w	a5,d0
 	btst	#0,d0
 	beq.s	.yli1
@@ -4562,7 +4562,7 @@ DrawSurfaces_Slime:
 	move.w	a5,d0
 	btst	#2,d0
 	beq.s	.yli3
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	add.l	#80,a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
@@ -4606,7 +4606,7 @@ FillScreen_Slime:
 	asr.w	#1,d1
 	or.w	d1,d2		; bltsize
 
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	move.w	maxY(a4),d0	; maxY
 	mulu	#40*3,d0
 	ext.l	d4
@@ -4641,7 +4641,7 @@ FillScreen_Slime:
 vbi_Dick:
 	movem.l	d0-d7/a0-a6,-(sp)
 	lea	custom,a6
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 
 	IF	RMOUSE_PAUSE = 1
 	RightMouse
@@ -4662,7 +4662,7 @@ vbi_Dick:
 	move.w	(a0,d0.w),d0
 	move.w	d0,boingval(a4)
 	muls	#40*4,d0
-	lea	dick,a0
+	lea	Dick,a0
 	add.l	d0,a0
 	add.l	#40*4*3,a0
 
@@ -4855,7 +4855,7 @@ mutka:
 vbi_Glenz:
 	movem.l d0-d7/a0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 	lea	custom,a6
 	
 	IF	RMOUSE_PAUSE = 1
@@ -4873,7 +4873,7 @@ vbi_Glenz:
 	moveq	#4-1,d1
 	bsr.w	SetPlanes
 
-	move.l	buffer(a4),d0
+	move.l	Buffer(a4),d0
 	moveq	#0,d1
 	move.w	minYOLD(a4),d1
 	mulu	#40*4,d1
@@ -5055,7 +5055,7 @@ DrawSurfaces_Glenz:
 	move.w	a5,d0
 	btst	#0,d0
 	beq.s	.yli1
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
 	move.w	2(a2,d3.w),d1
@@ -5067,7 +5067,7 @@ DrawSurfaces_Glenz:
 	move.w	a5,d0
 	btst	#1,d0
 	beq.s	.yli2
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	add.l	#40,a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
@@ -5085,7 +5085,7 @@ DrawSurfaces_Glenz:
 	move.w	a5,d0
 	btst	#0,d0
 	beq.s	.yli11
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	add.l	#80,a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
@@ -5098,7 +5098,7 @@ DrawSurfaces_Glenz:
 	move.w	a5,d0
 	btst	#1,d0
 	beq.s	.yli22
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	add.l	#120,a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
@@ -5139,7 +5139,7 @@ FillScreen_Glenz:
 	asr.w	#1,d1
 	or.w	d1,d2		; bltsize
 
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	move.w	maxY(a4),d0	; maxY
 	mulu	#40*4,d0
 	ext.l	d4
@@ -5280,7 +5280,7 @@ drawline_Glenz:
 vbi_The_End:
 	movem.l d0-d7/a0-a6,-(sp)
 
-	lea	bss_stack,a4
+	lea	Bss_Stack,a4
 	lea	custom,a6
 	
 	IF	RMOUSE_PAUSE = 1
@@ -5296,7 +5296,7 @@ vbi_The_End:
 	moveq	#3-1,d1
 	bsr.w	SetPlanes
 
-	move.l	buffer(a4),d0
+	move.l	Buffer(a4),d0
 	addq.l	#6,d0
 	moveq	#6,d1
 	move.w	#230*3*64+17,d2
@@ -5401,7 +5401,7 @@ vbi_The_End:
 	move.w	#8-1,ObjPointNo(a4)
 	move.w	#1-1,ObjFaceNo(a4)
 	move.l	#ObjCoords_RGB_Plate1,ObjCoords(a4)
-	move.l	#ObjFaceV_RGB_PLate,ObjFace(a4)
+	move.l	#ObjFaceV_RGB_Plate,ObjFace(a4)
 	move.l	#ObjFaceS_RGB_Plate1,ObjConnect(a4)
 
 	sub.w	a3,a3
@@ -5416,7 +5416,7 @@ vbi_The_End:
 	move.w	#8-1,ObjPointNo(a4)
 	move.w	#1-1,ObjFaceNo(a4)
 	move.l	#ObjCoords_RGB_Plate2,ObjCoords(a4)
-	move.l	#ObjFaceV_RGB_PLate,ObjFace(a4)
+	move.l	#ObjFaceV_RGB_Plate,ObjFace(a4)
 	move.l	#ObjFaceS_RGB_Plate2,ObjConnect(a4)
 
 	sub.w	a3,a3
@@ -5432,7 +5432,7 @@ vbi_The_End:
 	move.w	#8-1,ObjPointNo(a4)
 	move.w	#1-1,ObjFaceNo(a4)
 	move.l	#ObjCoords_RGB_Plate3,ObjCoords(a4)
-	move.l	#ObjFaceV_RGB_PLate,ObjFace(a4)
+	move.l	#ObjFaceV_RGB_Plate,ObjFace(a4)
 	move.l	#ObjFaceS_RGB_Plate3,ObjConnect(a4)
 
 	sub.w	a3,a3
@@ -5613,7 +5613,7 @@ DrawSurfaces_RGB_Plates:
 	move.w	a5,d0
 	btst	#2,d0
 	beq.s	.yli3
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	add.l	#80,a0
 	move.w	(a1),d3			; lisäys, josta löytyy Rx1
 	move.w	(a2,d3.w),d0		; Rx1
@@ -5635,7 +5635,7 @@ DrawSurfaces_RGB_Plates:
 
 FillScreen_RGB_Plates:
 
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	add.l	d0,a0
 
 
@@ -5783,7 +5783,7 @@ DefineObject_The_End
 	move.w	#12-1,ObjPointNo(a4)
 	move.w	#1-1,ObjFaceNo(a4)
 	move.l	#ObjCoords_RGB_Plate1,ObjCoords(a4)
-	move.l	#ObjFaceV_RGB_PLate,ObjFace(a4)
+	move.l	#ObjFaceV_RGB_Plate,ObjFace(a4)
 	move.l	#ObjFaceS_RGB_Plate1,ObjConnect(a4)
 	move.w	#-900,Distance(a4)
 	rts
@@ -7121,7 +7121,7 @@ fonts:		incbin	"TheEndpienifontti.raw"
 FunnyText:	incbin	"FunnyText2.raw"
 
 plasma:		incbin	"RCR.plasma.raw"
-writerfonts:	incbin	"MandelWriterFont.raw"
+WriterFonts:	incbin	"MandelWriterFont.raw"
 Dick:		incbin	"dick.raw"
 
 	; kaikki includet saat meiltä ja halvalla lähtee...
