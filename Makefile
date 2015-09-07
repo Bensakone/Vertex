@@ -8,4 +8,7 @@ run: Vertex2015
 	cp Vertex2015 run
 	$(FSUAE) fs-uae.config
 
-.PHONY: run
+clean:
+	rm -f Vertex2015 run/Vertex2015
+
+.PHONY: run clean
