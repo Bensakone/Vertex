@@ -56,12 +56,15 @@
 ***									***
 ***************************************************************************
 
-	incdir	INC:
-	include custom.i
-	include cia.i
-	include	exec/exec_lib.i
-	include	libraries/dos_lib.i
-	include MGmacros.i
+	incdir	"../INCLUDE"
+	incdir	"../EXTERN"
+	incdir	"../SND"
+
+	include "custom.i"
+	include "cia.i"
+***	include "exec/exec_lib.i"
+***	include "libraries/dos_lib.i"
+	include "MGmacros.i"
 
 
 ***	Debug options
@@ -7111,15 +7114,15 @@ Colors_EndText:
 ***************************************************************************
 
 
-mt_data:	INCBIN "mod:mod.resolution2"
+mt_data:	incbin	"mod.RESOLUTION2"
 
 	ds.b	100	; älä poista tätä vaikka vaikuttaakin typerältä...!
-fonts:		INCBIN	EXT:Vertex/TheEndPieniFontti.raw
-FunnyText:	INCBIN	EXT:Vertex/FunnyText2.raw
+fonts:		incbin	"TheEndpienifontti.raw"
+FunnyText:	incbin	"FunnyText2.raw"
 
-plasma:		INCBIN	EXT:Vertex/RCR.plasma.raw
-writerfonts:	INCBIN	EXT:Vertex/MandelWriterFont.raw
-Dick:		INCBIN	EXT:Vertex/Dick.raw
+plasma:		incbin	"RCR.plasma.raw"
+writerfonts:	incbin	"MandelWriterFont.raw"
+Dick:		incbin	"dick.raw"
 
 	; kaikki includet saat meiltä ja halvalla lähtee...
 
@@ -7167,7 +7170,7 @@ ActiveOrder_MLV:	ds.l	5*4	; planea muutetaan ja neljää
 
 	SECTION dfdata,data_p
 
-End_Text_Pic:	INCBIN	"ext:VertexEndText22.raw"
+End_Text_Pic:	incbin	"VertexEndText22.raw"
 	; ei mahtunut chippiin
 
 
@@ -7208,10 +7211,9 @@ Colors_Plasma:
 ;	You should use add quick instead... Familiar, eh? 
 ;		- Maverick
 
-	incdir	ext:Vertex/
-	include	OpenYourEyesNow.3DO	; objecteja, meiltä löytyy...
-	include	Line&Wille.3DO
-	include	VertexObjRestOf.3DO
+	include	"OpenYourEyesNow.3do"	; objecteja, meiltä löytyy...
+	include	"Line&Wille.3DO"
+	include	"VertexObjRestOf.3DO"
 
 ; objektin x-,y-,z-koordinaatit
 ObjCoords_RGB_Plate1:
