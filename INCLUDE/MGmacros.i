@@ -314,7 +314,7 @@ CosTable:
 
 	ENDM
 
-NoisetrackerV2.0: MACRO
+NoisetrackerV2_0: MACRO
 
 ;нннннннннннннннннннннннннннннннннннннн
 ;н   NoisetrackerV2.0 Normal replay   н
@@ -816,7 +816,7 @@ mt_voice4:	blk.w	13,0
 
 
 
-NoisetrackerV2.0_V: MACRO
+NoisetrackerV2_0_V: MACRO
 
 ;нннннннннннннннннннннннннннннннннннннн
 ;н   NoisetrackerV2.0 Normal replay   н
@@ -1300,7 +1300,7 @@ mt_periods:
 
 	ENDM
 
-NoisetrackerV2.0_Variables: MACRO
+NoisetrackerV2_0_Variables: MACRO
 
 
 mt_speed:	dc.b	6

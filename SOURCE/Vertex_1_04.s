@@ -5796,7 +5796,7 @@ DefineObject_The_End
 ***	;; END OF ALL PARTS, SOME SMALL BUT IMPORTANT ROUTINES LEFT	***
 ***************************************************************************
 
-	NoisetrackerV2.0_V		; replay makrona
+	NoisetrackerV2_0_V		; replay makrona
 
 gfxname:	dc.b 'graphics.library',0,0
 dosname:	dc.b 'dos.library',0
@@ -7174,7 +7174,7 @@ End_Text_Pic:	incbin	"VertexEndText22.raw"
 	; ei mahtunut chippiin
 
 
-	NoisetrackerV2.0_Variables	; musarutiinin muuttujat
+	NoisetrackerV2_0_Variables	; musarutiinin muuttujat
 
 ***	Tätä colors pöytää editoidaan
 
