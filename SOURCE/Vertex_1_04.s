@@ -59,7 +59,6 @@
 	include "custom.i"
 	include "cia.i"
 ***	include "exec/exec_lib.i"
-***	include "libraries/dos_lib.i"
 	include "MGmacros.i"
 
 
@@ -840,34 +839,6 @@ Main:	bra.s	.ver
 	move.w	oldintena(a4),d0
 	or.w	#$C000,d0
 	move.w	d0,intena(a6)
-
-
-	move.l	4.w,a6			; output message writer
-	lea	dosname(pc),a1		; added in v1.01
-	moveq	#0,d0
-***	jsr	_LVOOpenLibrary(a6)
-	tst.l	d0
-	beq.s	.no_dos
-	move.l	d0,a5
-
-***	jsr	_LVOOutput(a5)
-	move.l	d0,d1
-	beq.b	.close_dos
-
-	lea	startupmessage(pc),a3
-	move.l	a3,d2
-.dw_search_end
-	tst.b	(a3)+
-	bne.b	.dw_search_end
-	subq.l	#1,a3
-	move.l	a3,d3
-	sub.l	d2,d3
-***	jsr	_LVOWrite(a5)
-
-.close_dos
-	move.l	a5,a1
-***	jsr	_LVOCloseLibrary(a6)
-.no_dos
 
 	movem.l	(sp)+,d0-a6
 	moveq	#0,d0
@@ -5795,7 +5766,6 @@ DefineObject_The_End
 	NoisetrackerV2_0_V		; replay makrona
 
 gfxname:	dc.b 'graphics.library',0,0
-dosname:	dc.b 'dos.library',0
 
 ***************************************************************************
 ***	FadeIn / FadeOut / FlashIn / FlashOut v1.02			***
@@ -6464,38 +6434,6 @@ Colors_Dick:
 
 Colors_Plates:
 	dc.w	$000,$f00,$0f0,$ff0,$00f,$f0f,$0ff,$fff
-
-
-***************************************************************************
-*** ;;	LOPUN OUTPUT-MESSAGE						***
-***************************************************************************
-
-startupmessage:		; lukee siinä startup, mutten jaksa muuttaa...
-	dc.b	10,10,10
-	dc.b	"   That's all & that's it. Actually this demo was",10
-	dc.b	"   not released at the Assembly '93 as stated before.",10
-	dc.b	"   There are certain reasons for that, of which one",10
-	dc.b	"   is the exotic men party members (drunken, as you",10
-	dc.b	"   might already have guessed) continuously",10
-	dc.b	"   unplugging our power supply while saving some",10
-	dc.b	"   crucial modifications in the source code.",10,10
-	
-	dc.b	"   However, this was released a week after, fully",10
-	dc.b	"   knowing that it won't work under AGA machines,",10
-	dc.b	"   and fully knowing how it could be repaired.",10
-	dc.b	"   But no energy was wasted more on a Red Chrome -demo,",10
-	dc.b	"   because the future of this group seemed (and still",10
-	dc.b	"   seems) quite uncertain. If the individuals in this",10
-	dc.b	"   dead group should release something in the days to",10
-	dc.b	"   come, it will with no doubt happen under another",10
-	dc.b	"   name. Solong, Red Chrome. Forever.",10,10
-
-	dc.b	"   One can always be kind to people about whom one",10
-	dc.b	"   cares nothing.",10
-	dc.b	"      - Oscar Wilde",10,0
-	
-
-
 
 ***************************************************************************
 *** ;;	TYLSIÄ COPPERILISTOJA						***
