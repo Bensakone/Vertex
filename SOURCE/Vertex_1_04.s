@@ -130,12 +130,12 @@ Main:	bra.s	.ver
 	move.l	4.w,a6
 	lea	gfxname(pc),a1
 	moveq	#0,d0
-	jsr	_LVOOpenLibrary(a6)
+***	jsr	_LVOOpenLibrary(a6)
 	tst.l	d0
 	beq.s	.no_gfx_lib_but_so_what
 	move.l 	d0,a1
 	move.l 	38(a1),oldcopper(a4)
-	jsr	_LVOCloseLibrary(a6)
+***	jsr	_LVOCloseLibrary(a6)
 
 .no_gfx_lib_but_so_what
 	lea	custom,a6
@@ -849,12 +849,12 @@ Main:	bra.s	.ver
 	move.l	4.w,a6			; output message writer
 	lea	dosname(pc),a1		; added in v1.01
 	moveq	#0,d0
-	jsr	_LVOOpenLibrary(a6)
+***	jsr	_LVOOpenLibrary(a6)
 	tst.l	d0
 	beq.s	.no_dos
 	move.l	d0,a5
 
-	jsr	_LVOOutput(a5)
+***	jsr	_LVOOutput(a5)
 	move.l	d0,d1
 	beq.b	.close_dos
 
@@ -866,11 +866,11 @@ Main:	bra.s	.ver
 	subq.l	#1,a3
 	move.l	a3,d3
 	sub.l	d2,d3
-	jsr	_LVOWrite(a5)
+***	jsr	_LVOWrite(a5)
 
 .close_dos
 	move.l	a5,a1
-	jsr	_LVOCloseLibrary(a6)
+***	jsr	_LVOCloseLibrary(a6)
 .no_dos
 
 	movem.l	(sp)+,d0-a6
