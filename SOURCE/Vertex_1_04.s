@@ -58,7 +58,6 @@
 
 	include "custom.i"
 	include "cia.i"
-***	include "exec/exec_lib.i"
 	include "MGmacros.i"
 
 
@@ -125,12 +124,12 @@ Main:	bra.s	.ver
 	move.l	4.w,a6
 	lea	gfxname(pc),a1
 	moveq	#0,d0
-***	jsr	_LVOOpenLibrary(a6)
+	jsr	-552(a6)	; _LVOOpenLibrary
 	tst.l	d0
 	beq.s	.no_gfx_lib_but_so_what
 	move.l 	d0,a1
 	move.l 	38(a1),oldcopper(a4)
-***	jsr	_LVOCloseLibrary(a6)
+	jsr	-414(a6)	; _LVOCloseLibrary
 
 .no_gfx_lib_but_so_what
 	lea	custom,a6
