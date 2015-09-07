@@ -2333,7 +2333,7 @@ BlitBob:
 	move.w	d4,d5
 	or.w	#$9f0,d4
 	
-	waitb
+	WaitB
 	move.l	#-1,bltafwm(a6)
 	move.w	d2,bltamod(a6)
 	move.w	d3,bltdmod(a6)
@@ -2541,7 +2541,7 @@ Do_Anus:
 mlv_piirraviivat:
 	move.l	ObjConnect(a4),a2
 	move.w	ObjLineNo(a4),d7
-	waitb
+	WaitB
 	move.l	planebuffer(a4),a0
 	move.w	#$8000,bltadat(a6)
 	move.w	#$ffff,bltbdat(a6)
@@ -2606,7 +2606,7 @@ drawline1:
 	ror.w	#4,d0
 	or.w	#%0000101101011010,d0
 
-	waitb
+	WaitB
 
 	move.w	d2,bltbmod(a6)
 	sub.w	d3,d2
@@ -3502,7 +3502,7 @@ vbi_FillIcos:
 	beq.w	.rmpause
 	ENDC
 
-	nastyOFF		; more cycles to the CPU
+	NastyOFF		; more cycles to the CPU
 
 	bsr.w	SwapBuffers	; tuplapuskurointi
 
@@ -3602,7 +3602,7 @@ vbi_FillIcos:
 	bsr.w	CalcVecPoints
 	bsr.w	VisiblePlanes_FillIcos
 
-	nastyON
+	NastyON
 
 	bsr	DrawSurfaces_FillIcos
 
@@ -3620,7 +3620,7 @@ vbi_FillIcos:
 .end
 
 	bsr.w	FillScreen_3bpl
-	waitb
+	WaitB
 
 
 	cmp.w	#16*50,timer(a4)
@@ -3790,7 +3790,7 @@ DrawSurfaces_FWille:
 
 
 DrawSurfaces_FillIcos:
-	waitb
+	WaitB
 	move.w	#$8000,bltadat(a6)
 	move.w	#$ffff,bltbdat(a6)
 	move.l	#-1,bltafwm(a6)
@@ -3871,7 +3871,7 @@ FillScreen_3bpl:
 	add.l	d0,a0
 	add.l	d4,a0		; startaddress a0
 
-	waitb
+	WaitB
 	move.l	a0,bltapth(a6)
 	move.l	a0,bltdpth(a6)
 	move.w	d3,bltamod(a6)
@@ -3956,7 +3956,7 @@ drawline_FillIcos:
 	ror.w	#4,d0
 	or.w	#%0000101101011010,d0
 
-	waitb
+	WaitB
 
 	move.w	d2,bltbmod(a6)
 	sub.w	d3,d2
@@ -4301,7 +4301,7 @@ vbi_Slime:
 	beq.w	.rmpause
 	ENDC
 
-	nastyOFF		; more cycles to the CPU
+	NastyOFF		; more cycles to the CPU
 
 	bsr.w	SwapBuffers	; tuplapuskurointi
 
@@ -4354,11 +4354,11 @@ vbi_Slime:
 	bsr.w	CalcVecPoints
 	bsr.w	VisiblePlanes
 
-	nastyON			; more cycles to the BLITTER
+	NastyON			; more cycles to the BLITTER
 
 	bsr	DrawSurfaces_Slime
 	bsr.w	FillScreen_Slime
-	waitb
+	WaitB
 
 	bsr	Do_Anus_Slime
 
@@ -4516,7 +4516,7 @@ SetAngles_Slime:
 
 
 DrawSurfaces_Slime:
-	waitb
+	WaitB
 	move.w	#$8000,bltadat(a6)
 	move.w	#$ffff,bltbdat(a6)
 	move.l	#-1,bltafwm(a6)
@@ -4610,7 +4610,7 @@ FillScreen_Slime:
 	add.l	d0,a0
 	add.l	d4,a0		; startaddress a0
 
-	waitb
+	WaitB
 	move.l	a0,bltapth(a6)
 	move.l	a0,bltdpth(a6)
 	move.w	d3,bltamod(a6)
