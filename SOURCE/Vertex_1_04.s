@@ -27,7 +27,7 @@
 ***	Red Chrome Public Relations Management				***
 ***		RED CHROME						***
 ***		PO BOX 70						***
-***		SF-85801 HAAPAJƒRVI					***
+***		SF-85801 HAAPAJ√ÑRVI					***
 ***		FINLAND							***
 ***									***
 ***									***
@@ -878,7 +878,7 @@ Main:	bra.s	.ver
 
 
 
-***	CIAB musansoittokeskeytys - tosin ei cia-playerill‰...
+***	CIAB musansoittokeskeytys - tosin ei cia-playerill√§...
 
 int13:	move.l	d0,-(sp)
 	bsr.w	mt_music
@@ -1103,7 +1103,7 @@ vbi_BPV:
 
 	tst.w	FadeValue(a4)
 	bne.s	.overandout
-	move.w	#-1,quitflag(a4)	; TƒSSƒ TƒSSƒ TƒSSƒ TƒSSƒ!!!!!!
+	move.w	#-1,quitflag(a4)	; T√ÑSS√Ñ T√ÑSS√Ñ T√ÑSS√Ñ T√ÑSS√Ñ!!!!!!
 .overandout
 
 	IF	RASTERTIME	= 1
@@ -1387,7 +1387,7 @@ vbi_Line:
 	bsr	Scroller
 
 	IF	RASTERTIME = 1
-	move.w	#$005,c0(a6)		; rasteriaika 	( <= ter‰v‰‰! ;-)
+	move.w	#$005,c0(a6)		; rasteriaika 	( <= ter√§v√§√§! ;-)
 	ENDC
 .rmpause
 
@@ -1619,12 +1619,12 @@ DrawSurfaces_Wille:
 
 	move.l	ObjConnect(a4),a1	; objectin tiedot
 	lea	TempCoordsTable,a2	; lasketut xy
-	lea	FaceVisibleTable,a3	; tasojen n‰kyvyys
+	lea	FaceVisibleTable,a3	; tasojen n√§kyvyys
 
-	move.w	(a1)+,d7		; tasojen m‰‰r‰
-.loop1:	move.w	(a1)+,d6		; viivojen m‰‰r‰ tasossa
-	move.w	(a1)+,a5		; v‰ri
-	move.w	(a3)+,d0		; piirret‰‰nkˆ?
+	move.w	(a1)+,d7		; tasojen m√§√§r√§
+.loop1:	move.w	(a1)+,d6		; viivojen m√§√§r√§ tasossa
+	move.w	(a1)+,a5		; v√§ri
+	move.w	(a3)+,d0		; piirret√§√§nk√∂?
 	bmi.w	.DoNotDraw
 
 	move.w	d0,a5
@@ -1694,8 +1694,8 @@ FillScreen_Wille:
 	sub.w	d1,d3		; modulo d3
 	
 	move.w	maxY(a4),d2	; maxY
-	sub.w	minY(a4),d2	; korkeus rivein‰
-;	asl.w	#1,d2		; korkeus*2 (planejen m‰‰r‰)
+	sub.w	minY(a4),d2	; korkeus rivein√§
+;	asl.w	#1,d2		; korkeus*2 (planejen m√§√§r√§)
 	mulu	#3,d2
 	asl.w	#6,d2		; oikeisiin bitteihin
 	asr.w	#1,d1
@@ -1768,9 +1768,9 @@ drawline_Wille:
 	moveq	#0,d4
 	sub.w	d0,d2		; DeltaX	(Left2Right => pakosta posit.)
 	sub.w	d1,d3		; DeltaY
-	bge.s	.Up2Down	; positiivinen => ylh‰‰lt‰ alas
-	neg.w	d3		; negatiivinen => alhaalta ylˆs
-	moveq	#2,d4		; oktantti alhaalta ylˆs -vaastaavaksi
+	bge.s	.Up2Down	; positiivinen => ylh√§√§lt√§ alas
+	neg.w	d3		; negatiivinen => alhaalta yl√∂s
+	moveq	#2,d4		; oktantti alhaalta yl√∂s -vaastaavaksi
 .Up2Down
 	cmp.w	d2,d3
 	bge.s	.DeltaOk	; d2 = DeltaP, d3 = DeltaS
@@ -1793,7 +1793,7 @@ drawline_Wille:
 	add.l	a0,d1		; d0 = viivan alkuosoite
 
 	move.b	.octant(pc,d4.w),d4
-	and.w	#$f,d5		; d5 = l‰htˆpikselin tarkka paikka (X)
+	and.w	#$f,d5		; d5 = l√§ht√∂pikselin tarkka paikka (X)
 	ror.w	#4,d5
 	or.w	#$bea,d5	; mintermi & kanavat
 	swap	d5
@@ -1943,9 +1943,9 @@ ScrollTable:
 	dc.w	46	; X
 	dc.w	48	; Y
 	dc.w	50	; Z
-	dc.w	52	; [	= ƒ
+	dc.w	52	; [	= √Ñ
 	dc.w	92	; \
-	dc.w	54	; ]	= ÷
+	dc.w	54	; ]	= √ñ
 	dc.w	92	; ^
 	dc.w	92	; _
 	dc.w	92	; 
@@ -1955,8 +1955,8 @@ ScrollTable:
 	;		- Great J
 
 
-	;	Ja kenenkˆh‰n takia? Kuka asetti fontit EI ascii
-	;	j‰rjestykseen? Ilmeisesti edellinen kommentoija...
+	;	Ja kenenk√∂h√§n takia? Kuka asetti fontit EI ascii
+	;	j√§rjestykseen? Ilmeisesti edellinen kommentoija...
 	;		- Maverick the taulukoiden vihaaja
 
 text:	
@@ -2023,13 +2023,13 @@ DrawSurfaces:
 
 	move.l	ObjConnect(a4),a1	; objectin tiedot
 	lea	TempCoordsTable,a2		; lasketut xy
-	lea	FaceVisibleTable,a3	; tasojen n‰kyvyys
+	lea	FaceVisibleTable,a3	; tasojen n√§kyvyys
 
-	move.w	(a1)+,d7		; tasojen m‰‰r‰
-.loop1:	move.w	(a1)+,d6		; viivojen m‰‰r‰ tasossa
-	move.w	(a1)+,a5		; v‰ri
-	cmp.w	#0,(a3)+		; piirret‰‰nkˆ?
-	bge.w	.DoNotDraw		; eip‰ ole n‰kyviss‰
+	move.w	(a1)+,d7		; tasojen m√§√§r√§
+.loop1:	move.w	(a1)+,d6		; viivojen m√§√§r√§ tasossa
+	move.w	(a1)+,a5		; v√§ri
+	cmp.w	#0,(a3)+		; piirret√§√§nk√∂?
+	bge.w	.DoNotDraw		; eip√§ ole n√§kyviss√§
 .loop2:
 	move.l	Buffer(a4),a0
 	move.w	(a1),d3
@@ -2075,9 +2075,9 @@ FillScreen_Line:
 	sub.w	d1,d3		; modulo d3
 	
 	move.w	maxY(a4),d2	; maxY
-	sub.w	minY(a4),d2	; korkeus rivein‰
+	sub.w	minY(a4),d2	; korkeus rivein√§
 
-;	asl.w	#2,d2		; korkeus*2 (planejen m‰‰r‰)
+;	asl.w	#2,d2		; korkeus*2 (planejen m√§√§r√§)
 	mulu	#3*64,d2
 ;	asl.w	#6,d2		; oikeisiin bitteihin
 
@@ -2149,9 +2149,9 @@ DrawLine:
 	moveq	#0,d4
 	sub.w	d0,d2		; DeltaX	(Left2Right => pakosta posit.)
 	sub.w	d1,d3		; DeltaY
-	bge.s	.Up2Down	; positiivinen => ylh‰‰lt‰ alas
-	neg.w	d3		; negatiivinen => alhaalta ylˆs
-	moveq	#2,d4		; oktantti alhaalta ylˆs -vaastaavaksi
+	bge.s	.Up2Down	; positiivinen => ylh√§√§lt√§ alas
+	neg.w	d3		; negatiivinen => alhaalta yl√∂s
+	moveq	#2,d4		; oktantti alhaalta yl√∂s -vaastaavaksi
 .Up2Down
 	cmp.w	d2,d3
 	bge.s	.DeltaOk	; d2 = DeltaP, d3 = DeltaS
@@ -2174,7 +2174,7 @@ DrawLine:
 	add.l	a0,d1		; d0 = viivan alkuosoite
 
 	move.b	.octant(pc,d4.w),d4
-	and.w	#$f,d5		; d5 = l‰htˆpikselin tarkka paikka (X)
+	and.w	#$f,d5		; d5 = l√§ht√∂pikselin tarkka paikka (X)
 	ror.w	#4,d5
 	or.w	#$bea,d5	; mintermi & kanavat
 	swap	d5
@@ -2316,8 +2316,8 @@ vbi_FunnyText:
 *	uses d4-d5 as work registers
 *	Code by Maverick 141092
 
-;	Jees, mulla ei ole t‰h‰n osaa eik‰ arpaa
-;		- J'boy		(elikk‰s Great J)
+;	Jees, mulla ei ole t√§h√§n osaa eik√§ arpaa
+;		- J'boy		(elikk√§s Great J)
 
 BlitBob:
 	mulu	#1*80,d1
@@ -2344,10 +2344,10 @@ BlitBob:
 	rts
 
 ***************************************************************************
-***	;; OSIO NELJƒ: VERTEX MULTIPLANE				***
+***	;; OSIO NELJ√Ñ: VERTEX MULTIPLANE				***
 ***************************************************************************
 
-***	‰l‰ koske tai tulee turpiin!!!
+***	√§l√§ koske tai tulee turpiin!!!
 
 vbi_Vertex:
 	movem.l d0-a6,-(sp)
@@ -2428,10 +2428,10 @@ vbi_Vertex:
 	bra.w	.phase1end
 
 
-	;				mit‰kˆh‰n fitti‰ nuo nrot tuolla
+	;				mit√§k√∂h√§n fitti√§ nuo nrot tuolla
 	;				laidalla meinaavat?
 	;				ei aavistustakaan, vaikka ihan
-	;				itse t‰m‰n 'hackin' naputtelinkin...
+	;				itse t√§m√§n 'hackin' naputtelinkin...
 	;					- J'boy
 
 
@@ -2739,10 +2739,10 @@ vbi_Grid:
 
 ***	set planes & plane buffer	(tarttee a1:een coplist-osoitteen)
 
-	;	(ripperin) Onni On - P‰tk‰ Kommentoitua Sorsaa
+	;	(ripperin) Onni On - P√§tk√§ Kommentoitua Sorsaa
 	;		- J'boy
 
-	;	Jack the Ripperin unelma - P‰tk‰ tuoretta Suolta
+	;	Jack the Ripperin unelma - P√§tk√§ tuoretta Suolta
 	; 	 ( Maverick after watching Bad Taste )
 
 
@@ -2756,12 +2756,12 @@ vbi_Grid:
 	;	number too? 
 	;		- Maverick
 	
-	;	Taitaa naikkosessa olla dekkariainesta, nimest‰ p‰‰tellen...
+	;	Taitaa naikkosessa olla dekkariainesta, nimest√§ p√§√§tellen...
 	;		- J
 
 	;	Ja valitettavasti poikakaverin nimi taitaa olla Dick Tracy...
-	;	Chekkaa muutama osio eteenp‰in.
-	;		- ÷
+	;	Chekkaa muutama osio eteenp√§in.
+	;		- √ñ
 	
 
 SetPlanes_MLV:
@@ -2774,7 +2774,7 @@ SetPlanes_MLV:
 
 	moveq	#4*4,d0				; 4 activea / frame (long)
 	mulu	framepointer(a4),d0		; monesko frame
-	add.w	d0,a0				; lis‰t‰‰n taulukkopointteriin
+	add.w	d0,a0				; lis√§t√§√§n taulukkopointteriin
 	moveq	#2,d1
 
 	moveq	#4-1,d7				; asetetaan 4 planea
@@ -2906,9 +2906,9 @@ drawline_Grid:
 	moveq	#0,d4
 	sub.w	d0,d2		; DeltaX	(Left2Right => pakosta posit.)
 	sub.w	d1,d3		; DeltaY
-	bge.s	.Up2Down	; positiivinen => ylh‰‰lt‰ alas
-	neg.w	d3		; negatiivinen => alhaalta ylˆs
-	moveq	#2,d4		; oktantti alhaalta ylˆs -vaastaavaksi
+	bge.s	.Up2Down	; positiivinen => ylh√§√§lt√§ alas
+	neg.w	d3		; negatiivinen => alhaalta yl√∂s
+	moveq	#2,d4		; oktantti alhaalta yl√∂s -vaastaavaksi
 .Up2Down
 	cmp.w	d2,d3
 	bge.s	.DeltaOk	; d2 = DeltaP, d3 = DeltaS
@@ -2931,7 +2931,7 @@ drawline_Grid:
 	add.l	a0,d1		; d0 = viivan alkuosoite
 
 	move.b	.octant(pc,d4.w),d4
-	and.w	#$f,d5		; d5 = l‰htˆpikselin tarkka paikka (X)
+	and.w	#$f,d5		; d5 = l√§ht√∂pikselin tarkka paikka (X)
 	ror.w	#4,d5
 	or.w	#$bea,d5	; mintermi & kanavat
 	swap	d5
@@ -2972,7 +2972,7 @@ drawline_Grid:
 
 
 ***	set the orders for actives and buffer
-***	'v‰‰nn‰ se rautalangasta' tyyli‰ k‰ytti menestyksellisesti J'boy
+***	'v√§√§nn√§ se rautalangasta' tyyli√§ k√§ytti menestyksellisesti J'boy
 
 
 	;	I use macro assembler instead.
@@ -3158,19 +3158,19 @@ vbi_Field:
 ***************************************************************************
 
 
-WIDTH	= 12		; koko pistein‰, leveys*pituus
-HEIGHT	= 12		;  (ok, ok! on siin‰ 'height' - en jaksa muuttaa...)
+WIDTH	= 12		; koko pistein√§, leveys*pituus
+HEIGHT	= 12		;  (ok, ok! on siin√§ 'height' - en jaksa muuttaa...)
 _XSTART	= -55		; aloitusnurkan koordinaatit
 _YSTART	= -55
-_XADD	= 10		; pisteiden v‰lit
+_XADD	= 10		; pisteiden v√§lit
 _YADD	= 10
 XVAIHE	= 12		; vaihe-erot, huom! parilliset!
 YVAIHE	= 16
-YASTE	= 3		; pyˆritysnopeus asteina
+YASTE	= 3		; py√∂ritysnopeus asteina
 SPEED	= 2		; wave-nopeus
 
 
-*****	tehd‰‰n objekti taulukkoon annettujen tietojen perusteella
+*****	tehd√§√§n objekti taulukkoon annettujen tietojen perusteella
 
 CreateObject:
 	lea	xval,a0
@@ -3196,7 +3196,7 @@ CreateObject:
 	rts
 
 
-*****	p‰‰rutiini, piirret‰‰n ja lasketaan pisteet
+*****	p√§√§rutiini, piirret√§√§n ja lasketaan pisteet
 
 StarField:
 
@@ -3378,7 +3378,7 @@ RotateBuffers_Field:
 	;		- J
 
 ***************************************************************************
-***	;; OSIO SEITSEMƒN: REALTIME 5-RASTERLINE PLASMA			***
+***	;; OSIO SEITSEM√ÑN: REALTIME 5-RASTERLINE PLASMA			***
 ***************************************************************************
 
 vbi_Plasma:
@@ -3432,12 +3432,12 @@ vbi_Plasma:
 ; Simple (=Dumb, but FAAAST) Cycle Routine v0.02
 ; December 25th 1992 by Great J of Red Chrome
 
-; Huomasitko? T‰ysin feikki-efekti ja on ihan kivan n‰kˆinen!
+; Huomasitko? T√§ysin feikki-efekti ja on ihan kivan n√§k√∂inen!
 
-; Huomasitko? T‰ysin vakavalla naamalla noinkin suurin vale!
+; Huomasitko? T√§ysin vakavalla naamalla noinkin suurin vale!
 ;	- M
 
-; No voi saatana! Revi se sitten m‰keen!
+; No voi saatana! Revi se sitten m√§keen!
 ;	- Arvaa kenen kommentti
 
 ; No way! The simple and dump routines are the greatest!
@@ -3646,10 +3646,10 @@ vbi_FillIcos:
 .yli2
 	
 	IF	RASTERTIME = 1
-	move.w	#$005,c0(a6)	; Ehdotus. Lis‰t‰‰n yhden framen kesto
-				; 2/50 sekuntiin. N‰in me kaikki koodarit
+	move.w	#$005,c0(a6)	; Ehdotus. Lis√§t√§√§n yhden framen kesto
+				; 2/50 sekuntiin. N√§in me kaikki koodarit
 				; saamme hienompia demoja aikaiseksi ja
-				; ne pyˆriv‰t edelleen yhdess‰ framessa...
+				; ne py√∂riv√§t edelleen yhdess√§ framessa...
 	ENDC
 .rmpause
 
@@ -3730,12 +3730,12 @@ DrawSurfaces_FWille:
 
 	move.l	ObjConnect(a4),a1	; objectin tiedot
 	lea	TempCoordsTable,a2	; lasketut xy
-	lea	FaceVisibleTable,a3	; tasojen n‰kyvyys
+	lea	FaceVisibleTable,a3	; tasojen n√§kyvyys
 
-	move.w	(a1)+,d7		; tasojen m‰‰r‰
-.loop1:	move.w	(a1)+,d6		; viivojen m‰‰r‰ tasossa
-	move.w	(a1)+,a5		; v‰ri
-	move.w	(a3)+,d0		; piirret‰‰nkˆ?
+	move.w	(a1)+,d7		; tasojen m√§√§r√§
+.loop1:	move.w	(a1)+,d6		; viivojen m√§√§r√§ tasossa
+	move.w	(a1)+,a5		; v√§ri
+	move.w	(a3)+,d0		; piirret√§√§nk√∂?
 	bmi.w	.DoNotDraw
 
 	move.w	d0,a5
@@ -3800,11 +3800,11 @@ DrawSurfaces_FillIcos:
 	lea	TempCoordsTable,a2
 	lea	FaceVisibleTable,a3
 
-	move.w	(a1)+,d7		; tasojen m‰‰r‰
-.loop1:	move.w	(a1)+,d6		; viivojen m‰‰r‰ tasossa
-	move.w	(a1)+,a5		; v‰ri
-	cmp.w	#0,(a3)+		; piirret‰‰nkˆ?
-	bge.w	.DoNotDraw		; eip‰ ole n‰kyviss‰
+	move.w	(a1)+,d7		; tasojen m√§√§r√§
+.loop1:	move.w	(a1)+,d6		; viivojen m√§√§r√§ tasossa
+	move.w	(a1)+,a5		; v√§ri
+	cmp.w	#0,(a3)+		; piirret√§√§nk√∂?
+	bge.w	.DoNotDraw		; eip√§ ole n√§kyviss√§
 .loop2:	move.l	Buffer(a4),a0
 	move.w	a5,d0
 	btst	#0,d0
@@ -3856,8 +3856,8 @@ FillScreen_3bpl:
 	sub.w	d1,d3		; modulo d3
 	
 	move.w	maxY(a4),d2	; maxY
-	sub.w	minY(a4),d2	; korkeus rivein‰
-;	asl.w	#1,d2		; korkeus*2 (planejen m‰‰r‰)
+	sub.w	minY(a4),d2	; korkeus rivein√§
+;	asl.w	#1,d2		; korkeus*2 (planejen m√§√§r√§)
 	mulu	#3,d2
 	asl.w	#6,d2		; oikeisiin bitteihin
 	asr.w	#1,d1
@@ -3983,7 +3983,7 @@ drawline_FillIcos:
 
 
 ***************************************************************************
-***	;; OSIO YHDEKSƒN: MANDELWRITER					***
+***	;; OSIO YHDEKS√ÑN: MANDELWRITER					***
 ***************************************************************************
 
 vbi_Writer:
@@ -4108,7 +4108,7 @@ Writer:
 	add.w	d0,a0	
 
 	addq.w	#2,Col(a4)		; next column
-	cmp.w	#41*2,Col(a4)		; x*2 merkki‰
+	cmp.w	#41*2,Col(a4)		; x*2 merkki√§
 	bne.s	.yli3
 	clr.w	Col(a4)
 
@@ -4192,7 +4192,7 @@ new_x_position:
 	move.w	d0,d2		; a=xc
 	move.w	d1,d3		; b=yc
 
-***	etsit‰‰n mandelbrotin luku
+***	etsit√§√§n mandelbrotin luku
 
 .loop	move.w	d2,d6
 	move.w	d3,d7
@@ -4201,7 +4201,7 @@ new_x_position:
 
 	add.l	d7,d6		; a^2+b^2
 	cmp.l	a5,d6		; modulo<2
-	bhs.b	.plot		; ahaa! lˆytyi!
+	bhs.b	.plot		; ahaa! l√∂ytyi!
 
 	addq.w	#1,d4		; incr. colore
 	cmp.w	#COLORI-1,d4
@@ -4524,13 +4524,13 @@ DrawSurfaces_Slime:
 
 	move.l	ObjConnect(a4),a1	; objectin tiedot
 	lea	TempCoordsTable,a2	; lasketut xy
-	lea	FaceVisibleTable,a3	; tasojen n‰kyvyys
+	lea	FaceVisibleTable,a3	; tasojen n√§kyvyys
 
-	move.w	(a1)+,d7		; tasojen m‰‰r‰
-.loop1:	move.w	(a1)+,d6		; viivojen m‰‰r‰ tasossa
-	move.w	(a1)+,a5		; v‰ri
-	cmp.w	#0,(a3)+		; piirret‰‰nkˆ?
-	bge.w	.DoNotDraw		; eip‰ ole n‰kyviss‰
+	move.w	(a1)+,d7		; tasojen m√§√§r√§
+.loop1:	move.w	(a1)+,d6		; viivojen m√§√§r√§ tasossa
+	move.w	(a1)+,a5		; v√§ri
+	cmp.w	#0,(a3)+		; piirret√§√§nk√∂?
+	bge.w	.DoNotDraw		; eip√§ ole n√§kyviss√§
 .loop2:	move.l	Buffer(a4),a0
 	move.w	a5,d0
 	btst	#0,d0
@@ -4574,7 +4574,7 @@ DrawSurfaces_Slime:
 .DoNotDraw:
 	addq.w	#1,d6		;dbf:n takia +1
 	asl.w	#2,d6		;viivojen maara * 4 (x.w,y.w)
-	add.w	d6,a1		;hyppy t‰m‰n tason viiva datan yli
+	add.w	d6,a1		;hyppy t√§m√§n tason viiva datan yli
 .jump1:	dbf	d7,.loop1
 	rts
 
@@ -4595,8 +4595,8 @@ FillScreen_Slime:
 	sub.w	d1,d3		; modulo d3
 	
 	move.w	maxY(a4),d2	; maxY
-	sub.w	minY(a4),d2	; korkeus rivein‰
-;	asl.w	#1,d2		; korkeus*2 (planejen m‰‰r‰)
+	sub.w	minY(a4),d2	; korkeus rivein√§
+;	asl.w	#1,d2		; korkeus*2 (planejen m√§√§r√§)
 	mulu	#3,d2
 	asl.w	#6,d2		; oikeisiin bitteihin
 	asr.w	#1,d1
@@ -4820,27 +4820,27 @@ mutka:
 
 
 
-	; Tekikˆ Jumala maailmaa luodessaan taulukoita?
+	; Tekik√∂ Jumala maailmaa luodessaan taulukoita?
 	; 	- Maverick
 
 
-	; Oli miten oli, niin veikkaisin, ett‰ ohjelmointikieli
+	; Oli miten oli, niin veikkaisin, ett√§ ohjelmointikieli
 	; niin suuressa projectissa oli C.
 	;	- Great J
 
 	; PS.	Miten olisi structuurien laita?
 
 
-	; Structuurit eiv‰t ole taulukoita, vaan ... tota noin... structuureja.
-	; Siin‰ on se suuri ero! 
-	; Tuskinpa maailmaa sent‰‰n C:ll‰ luotiin... vaikka niin olisikin
-	; tehty, niin osa ihmisest‰ ilmeisesti ohjelmoitiin Basicilla.
+	; Structuurit eiv√§t ole taulukoita, vaan ... tota noin... structuureja.
+	; Siin√§ on se suuri ero! 
+	; Tuskinpa maailmaa sent√§√§n C:ll√§ luotiin... vaikka niin olisikin
+	; tehty, niin osa ihmisest√§ ilmeisesti ohjelmoitiin Basicilla.
 	;	- Maverick "I still hate (s)tables"
 	
 	; Jaha.
 	;	- J'boy
 
-	; Ilmeisesti todistit juuri sen Basicilla ohjelmointi v‰itteeni...
+	; Ilmeisesti todistit juuri sen Basicilla ohjelmointi v√§itteeni...
 	;	- Maverick 
 
 
@@ -5040,13 +5040,13 @@ DrawSurfaces_Glenz:
 
 	move.l	ObjConnect(a4),a1	; objectin tiedot
 	lea	TempCoordsTable,a2	; lasketut xy
-	lea	FaceVisibleTable,a3	; tasojen n‰kyvyys
+	lea	FaceVisibleTable,a3	; tasojen n√§kyvyys
 
-	move.w	(a1)+,d7		; tasojen m‰‰r‰
-.loop1:	move.w	(a1)+,d6		; viivojen m‰‰r‰ tasossa
-	move.w	(a1)+,a5		; v‰ri
-	cmp.w	#0,(a3)+		; piirret‰‰nkˆ?
-	bge.w	.DoNotDraw		; eip‰ ole n‰kyviss‰
+	move.w	(a1)+,d7		; tasojen m√§√§r√§
+.loop1:	move.w	(a1)+,d6		; viivojen m√§√§r√§ tasossa
+	move.w	(a1)+,a5		; v√§ri
+	cmp.w	#0,(a3)+		; piirret√§√§nk√∂?
+	bge.w	.DoNotDraw		; eip√§ ole n√§kyviss√§
 .loop2:
 	move.w	a5,d0
 	btst	#0,d0
@@ -5126,9 +5126,9 @@ FillScreen_Glenz:
 	sub.w	d1,d3		; modulo d3
 	
 	move.w	maxY(a4),d2	; maxY
-	sub.w	minY(a4),d2	; korkeus rivein‰
+	sub.w	minY(a4),d2	; korkeus rivein√§
 
-;	asl.w	#2,d2		; korkeus*2 (planejen m‰‰r‰)
+;	asl.w	#2,d2		; korkeus*2 (planejen m√§√§r√§)
 ;	mulu	#4,d2
 	asl.w	#6+2,d2		; oikeisiin bitteihin
 
@@ -5262,13 +5262,13 @@ drawline_Glenz:
 	; it's a hack! it's a plane! No, it's Superman!!
 
 
-	; Muuten tiesittekˆ, ett‰ DC her‰tti Supermanin takaisin henkiin?
-	; He myˆs myˆnsiv‰t Teriksen tappamisen olleen mainoskikka.
+	; Muuten tiesittek√∂, ett√§ DC her√§tti Supermanin takaisin henkiin?
+	; He my√∂s my√∂nsiv√§t Teriksen tappamisen olleen mainoskikka.
 	; Mainoskikka joka puri hiton hyvin... kuolinnumerot ovat jo kuumaa
 	; kamaa...
 
 
-	; Big Deal! olisit j‰tt‰nyt meik‰l‰isen "it's a hack"-kommentin
+	; Big Deal! olisit j√§tt√§nyt meik√§l√§isen "it's a hack"-kommentin
 	; rauhaan!
 	;	-J
 
@@ -5375,11 +5375,11 @@ vbi_The_End:
 	moveq	#1-1,d1
 	bsr.w	SetPlanes
 
-.no_flicker		; mik‰ sittemmin osoittautui toimimattomaksi...snif
+.no_flicker		; mik√§ sittemmin osoittautui toimimattomaksi...snif
 	move.w	minY(a4),minYOLD(a4)		; joop, Mave, that's life
 	move.l	xadd(a4),xaddOLD(a4)		; in a small village...
-	move.w	modulo(a4),moduloOLD(a4)	; no_flickerin ep‰ilij‰t
-	move.w	blitsize(a4),blitsizeOLD(a4)	; voivat tilata meilt‰
+	move.w	modulo(a4),moduloOLD(a4)	; no_flickerin ep√§ilij√§t
+	move.w	blitsize(a4),blitsizeOLD(a4)	; voivat tilata meilt√§
 						; toimivan sourcen...
 
 	cmp.w	#23*50-20,timer(a4)
@@ -5466,7 +5466,7 @@ vbi_The_End:
 
 .no_away
 
-	cmp.w	#41*50,timer(a4)		; TƒSSƒ TƒSSƒ TƒSSƒ
+	cmp.w	#41*50,timer(a4)		; T√ÑSS√Ñ T√ÑSS√Ñ T√ÑSS√Ñ
 	blo.s	.no_mgj_fade_yet
 	beq.s	.set_fadeval
 
@@ -5494,7 +5494,7 @@ vbi_The_End:
 	tst.w	FadeValue(a4)
 	bne.s	.not_final_quit_flaggie_set_yet
 
-	move.w	#-1,timer(a4)		; TƒSSƒ TƒSSƒ TƒSSƒ
+	move.w	#-1,timer(a4)		; T√ÑSS√Ñ T√ÑSS√Ñ T√ÑSS√Ñ
 .not_final_quit_flaggie_set_yet
 
 	sub.l	#2*80,End_Text_Ptr(a4)
@@ -5577,11 +5577,11 @@ DrawSurfaces_RGB_Plates:
 
 	move.l	ObjConnect(a4),a1	; objectin tiedot
 	lea	TempCoordsTable,a2		; lasketut xy
-	lea	FaceVisibleTable,a3	; tasojen n‰kyvyys
+	lea	FaceVisibleTable,a3	; tasojen n√§kyvyys
 
-	move.w	(a1)+,d7		; tasojen m‰‰r‰
-.loop1:	move.w	(a1)+,d6		; viivojen m‰‰r‰ tasossa
-	move.w	(a1)+,a5		; v‰ri
+	move.w	(a1)+,d7		; tasojen m√§√§r√§
+.loop1:	move.w	(a1)+,d6		; viivojen m√§√§r√§ tasossa
+	move.w	(a1)+,a5		; v√§ri
 .loop2:	move.l	Buffer(a4),a0
 	move.w	a5,d0
 	btst	#0,d0
@@ -5611,10 +5611,10 @@ DrawSurfaces_RGB_Plates:
 	beq.s	.yli3
 	move.l	Buffer(a4),a0
 	add.l	#80,a0
-	move.w	(a1),d3			; lis‰ys, josta lˆytyy Rx1
+	move.w	(a1),d3			; lis√§ys, josta l√∂ytyy Rx1
 	move.w	(a2,d3.w),d0		; Rx1
 	move.w	2(a2,d3.w),d1		; Ry1
-	move.w	2(a1),d3			; lis‰ys, josta lˆytyy Rx2
+	move.w	2(a1),d3			; lis√§ys, josta l√∂ytyy Rx2
 	move.w	(a2,d3.w),d2		; Rx2
 	move.w	2(a2,d3.w),d3		; Ry2
 	bsr.w	drawline_RGB_Plates
@@ -5625,7 +5625,7 @@ DrawSurfaces_RGB_Plates:
 .DoNotDraw:
 	addq.w	#1,d6		;dbf:n takia +1
 	asl.w	#2,d6		;viivojen maara * 4 (x.w,y.w)
-	add.w	d6,a1		;hyppy t‰m‰n tason viiva datan yli
+	add.w	d6,a1		;hyppy t√§m√§n tason viiva datan yli
 .jump1:	dbf	d7,.loop1
 	rts
 
@@ -5652,8 +5652,8 @@ FillScreen_RGB_Plates:
 	sub.w	d1,d3		; modulo d3
 	
 	move.w	maxY(a4),d2	; maxY
-	sub.w	minY(a4),d2	; korkeus rivein‰
-;	asl.w	#1,d2		; korkeus*2 (planejen m‰‰r‰)
+	sub.w	minY(a4),d2	; korkeus rivein√§
+;	asl.w	#1,d2		; korkeus*2 (planejen m√§√§r√§)
 ;	mulu	#3,d2
 	asl.w	#6,d2		; oikeisiin bitteihin
 	asr.w	#1,d1
@@ -5689,7 +5689,7 @@ drawline_RGB_Plates:
 	cmp.w	d1,d3
 	bhi.s	.next1
 	exg	d0,d2
-	exg	d1,d3	; ylh‰‰lt‰ alas
+	exg	d1,d3	; ylh√§√§lt√§ alas
 .next1:
 	cmp.w	minY(a4),d1
 	bhi.s	.eipienempiy
@@ -6280,12 +6280,12 @@ ClearScreen:
 	rts
 
 
-	; t‰ss‰ kohtaa oli readnappis-rutiini, mutta sille ei lˆytynyt
-	; mink‰‰nlaista k‰yttˆ‰, joten tuhosimme sen.
+	; t√§ss√§ kohtaa oli readnappis-rutiini, mutta sille ei l√∂ytynyt
+	; mink√§√§nlaista k√§ytt√∂√§, joten tuhosimme sen.
 
-	; eikˆs olekin paskamaista, t‰m‰ el‰m‰?
-	; t‰ss‰kin sourcessa puhutaan enemm‰n siit‰ poisj‰tetyist‰
-	; rutiineista kuin siin‰ olevista...
+	; eik√∂s olekin paskamaista, t√§m√§ el√§m√§?
+	; t√§ss√§kin sourcessa puhutaan enemm√§n siit√§ poisj√§tetyist√§
+	; rutiineista kuin siin√§ olevista...
 
 	; philosophy by J
 
@@ -6381,8 +6381,8 @@ x_sine: dc.w      0,2,3,5,6,8,9,11
 
 ;**** End of Shine! sinus wave generation
 
-	; ei kell‰‰n olis shine‰ parempaa sinecreatoria?
-	; tarvittais ja kiireell‰.
+	; ei kell√§√§n olis shine√§ parempaa sinecreatoria?
+	; tarvittais ja kiireell√§.
 	; palkkio.
 
 	;  - the coders at RCR
@@ -6470,7 +6470,7 @@ Colors_Plates:
 *** ;;	LOPUN OUTPUT-MESSAGE						***
 ***************************************************************************
 
-startupmessage:		; lukee siin‰ startup, mutten jaksa muuttaa...
+startupmessage:		; lukee siin√§ startup, mutten jaksa muuttaa...
 	dc.b	10,10,10
 	dc.b	"   That's all & that's it. Actually this demo was",10
 	dc.b	"   not released at the Assembly '93 as stated before.",10
@@ -6498,7 +6498,7 @@ startupmessage:		; lukee siin‰ startup, mutten jaksa muuttaa...
 
 
 ***************************************************************************
-*** ;;	TYLSIƒ COPPERILISTOJA						***
+*** ;;	TYLSI√Ñ COPPERILISTOJA						***
 ***************************************************************************
 
 	SECTION	coplist_etc,DATA_C
@@ -6592,7 +6592,7 @@ CopperList_FunnyText:
 	dc.w	c0,$0000
 CopColors_FunnyText:
 	dc.w	c1,$0FFF
-	dc.w	$9411,$fffe	; t‰rke‰ odotus
+	dc.w	$9411,$fffe	; t√§rke√§ odotus
 Planes_FunnyText:
 	dc.w	bpl1pth,0	; bitplane pointers
 	dc.w	bpl1ptl,0
@@ -6917,7 +6917,7 @@ Planes_Mandel:
 
 MedResWait:
 	dc.w	$2ae1,$fffe
-	dc.w	$2b11,$fffe	; lis‰‰ joka mandelrivi yhdell‰!
+	dc.w	$2b11,$fffe	; lis√§√§ joka mandelrivi yhdell√§!
 
 	dc.w 	bplcon0,$9200
 	dc.w	bplcon1,0
@@ -7112,7 +7112,7 @@ Colors_EndText:
 
 mt_data:	incbin	"mod.RESOLUTION2"
 
-	ds.b	100	; ‰l‰ poista t‰t‰ vaikka vaikuttaakin typer‰lt‰...!
+	ds.b	100	; √§l√§ poista t√§t√§ vaikka vaikuttaakin typer√§lt√§...!
 fonts:		incbin	"TheEndpienifontti.raw"
 FunnyText:	incbin	"FunnyText2.raw"
 
@@ -7120,7 +7120,7 @@ plasma:		incbin	"RCR.plasma.raw"
 WriterFonts:	incbin	"MandelWriterFont.raw"
 Dick:		incbin	"dick.raw"
 
-	; kaikki includet saat meilt‰ ja halvalla l‰htee...
+	; kaikki includet saat meilt√§ ja halvalla l√§htee...
 
 	; In God we trust, others pay cash!
 
@@ -7154,11 +7154,11 @@ bpl3:		ds.b	40*256-7680
 
 TempCoordsTable:	ds.w	51*2	; x,y...
 TempZTable:		ds.w	30*2
-FaceVisibleTable:	ds.w	50	; tason n‰kyvyys
-BufferOrder_MLV:	ds.l	5*1	; viisi framea. joka frame yht‰
-ActiveOrder_MLV:	ds.l	5*4	; planea muutetaan ja nelj‰‰
-					; n‰ytet‰‰n. niiden j‰rjestys
-					; talletetaan n‰ihin.
+FaceVisibleTable:	ds.w	50	; tason n√§kyvyys
+BufferOrder_MLV:	ds.l	5*1	; viisi framea. joka frame yht√§
+ActiveOrder_MLV:	ds.l	5*4	; planea muutetaan ja nelj√§√§
+					; n√§ytet√§√§n. niiden j√§rjestys
+					; talletetaan n√§ihin.
 
 	Alloc_Stack	; Alloc_Stack (tm) is a memory allocation
 			; routine for BSS-Stack (tm) Variables
@@ -7172,7 +7172,7 @@ End_Text_Pic:	incbin	"VertexEndText22.raw"
 
 	NoisetrackerV2_0_Variables	; musarutiinin muuttujat
 
-***	T‰t‰ colors pˆyt‰‰ editoidaan
+***	T√§t√§ colors p√∂yt√§√§ editoidaan
 
 Colors_Plasma:
 	dc.w	$00A5,$00B4,$00C3,$00E1,$00F0,$01F0,$03D0,$05B0
@@ -7183,12 +7183,12 @@ Colors_Plasma:
 
 ;	Kauhukammio-osio alkaa: taulukot!
 
-;	Jos Jumala olisi luonut ihmisen lent‰m‰‰n, olisi ihmisell‰ siivet.
-;	Mutta jos jumala olisi suunnitellut ihmisest‰ taulukoiden tekij‰‰,
-;	niin ihminen omaisi sis‰isen taululaskentaohjelman...
+;	Jos Jumala olisi luonut ihmisen lent√§m√§√§n, olisi ihmisell√§ siivet.
+;	Mutta jos jumala olisi suunnitellut ihmisest√§ taulukoiden tekij√§√§,
+;	niin ihminen omaisi sis√§isen taululaskentaohjelman...
 
-;	Ja aivoissa olisi valmiina macro "dc.w":t‰ varten. Vasen k‰si olisi
-;	korvattu jollain, mik‰ soveltuisi taulukoiden n‰pyttelyyn..
+;	Ja aivoissa olisi valmiina macro "dc.w":t√§ varten. Vasen k√§si olisi
+;	korvattu jollain, mik√§ soveltuisi taulukoiden n√§pyttelyyn..
 ;		- Maverick
 
 
@@ -7207,7 +7207,7 @@ Colors_Plasma:
 ;	You should use add quick instead... Familiar, eh? 
 ;		- Maverick
 
-	include	"OpenYourEyesNow.3do"	; objecteja, meilt‰ lˆytyy...
+	include	"OpenYourEyesNow.3do"	; objecteja, meilt√§ l√∂ytyy...
 	include	"Line&Wille.3DO"
 	include	"VertexObjRestOf.3DO"
 
