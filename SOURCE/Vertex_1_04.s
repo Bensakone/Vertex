@@ -374,10 +374,10 @@ Main:	bra.s	.ver
 	bsr	CreateObject
 
 	lea	bpl1,a0
-	move.l	a0,active(a4)
+	move.l	a0,Active(a4)
 
 	lea	bpl2,a0
-	move.l	a0,buffer(a4)
+	move.l	a0,Buffer(a4)
 	move.l	a0,d0
 	moveq	#20,d1
 	move.w	#64*270*2+22,d2
@@ -470,9 +470,9 @@ Main:	bra.s	.ver
 	move.w	#256*3*64+20,blitsize(a4)
 
 	lea	plane1,a0
-	move.l	a0,active(a4)
+	move.l	a0,Active(a4)
 	lea	plane2,a0
-	move.l	a0,buffer(a4)
+	move.l	a0,Buffer(a4)
 
 	lea	vbi_FillIcos(pc),a0
 	move.l	a0,$6c
@@ -506,7 +506,7 @@ Main:	bra.s	.ver
 
 	move.b	#$2c,mandelwait1(a4)
 	move.b	#$2d,mandelwait2(a4)
-	move.l	#80,BitplaneAdd(a4)
+	move.l	#80,BitPlaneAdd(a4)
 
 	move.w	#130,FadeValue(a4)
 
@@ -533,7 +533,7 @@ Main:	bra.s	.ver
 	clr.w	quitflag(a4)
 
 	lea	plane1,a0
-	move.l	a0,active(a4)
+	move.l	a0,Active(a4)
 
 	move.l	a0,d0
 	moveq	#0,d1
@@ -571,7 +571,7 @@ Main:	bra.s	.ver
 	move.w	#%0000000000100000,intena(a6)
 
 	lea	plane1,a0
-	move.l	a0,active(a4)
+	move.l	a0,Active(a4)
 
 	move.l	a0,d0
 	moveq.l	#0,d1
@@ -579,7 +579,7 @@ Main:	bra.s	.ver
 	bsr	ClearScreen
 
 	lea	plane2,a0
-	move.l	a0,buffer(a4)
+	move.l	a0,Buffer(a4)
 	move.l	a0,d0
 	bsr	ClearScreen
 
@@ -694,7 +694,7 @@ Main:	bra.s	.ver
 	move.w	#%0000000000100000,intena(a6)
 
 	lea	plane1,a0
-	move.l	a0,active(a4)
+	move.l	a0,Active(a4)
 	move.l	a0,d0
 	moveq	#0,d1
 	move.w	#64*2*256+40,d2
@@ -704,7 +704,7 @@ Main:	bra.s	.ver
 	bsr	ClearScreen
 
 	lea	plane2,a0
-	move.l	a0,buffer(a4)
+	move.l	a0,Buffer(a4)
 
 	move.l	a0,d0
 	moveq	#0,d1
@@ -813,7 +813,7 @@ Main:	bra.s	.ver
 
 .MainLoopEnd
 	cmp.w	#-1,quitflag(a4)
-	beq.s	.Cleanup
+	beq.s	.CleanUp
 	IF	DEBUG = 1			; this final debug
 	RightMouse				; added in v1.01
 	bne.w	.MainLoopEnd
@@ -824,7 +824,7 @@ Main:	bra.s	.ver
 
 *** ;;	14 - CLEAN UP ALL THE MESS
 
-.Cleanup
+.CleanUp
 	bsr.w	mt_end
 
 	lea	custom,a6
@@ -1633,7 +1633,7 @@ DrawSurfaces_Wille:
 
 	move.w	d0,a5
 
-.loop2:	move.l	buffer(a4),a0
+.loop2:	move.l	Buffer(a4),a0
 	move.w	a5,d0
 	btst	#0,d0
 	beq.s	.yli1
@@ -1660,7 +1660,7 @@ DrawSurfaces_Wille:
 	move.w	a5,d0
 	btst	#2,d0
 	beq.s	.yli3
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	add.l	#80,a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
@@ -1705,7 +1705,7 @@ FillScreen_Wille:
 	asr.w	#1,d1
 	or.w	d1,d2		; bltsize
 
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	move.w	maxY(a4),d0	; maxY
 	mulu	#40*3,d0
 	ext.l	d4
@@ -2035,7 +2035,7 @@ DrawSurfaces:
 	cmp.w	#0,(a3)+		; piirretäänkö?
 	bge.w	.DoNotDraw		; eipä ole näkyvissä
 .loop2:
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
 	move.w	2(a2,d3.w),d1
@@ -2047,7 +2047,7 @@ DrawSurfaces:
 	dbf	d6,.loop2
 	bra.s	.jump1
 .DoNotDraw:
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	lea	40(a0),a0
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
@@ -2088,7 +2088,7 @@ FillScreen_Line:
 	asr.w	#1,d1
 	or.w	d1,d2		; bltsize
 
-	move.l	buffer(a4),a0
+	move.l	Buffer(a4),a0
 	move.w	maxY(a4),d0	; maxY
 	mulu	#40*3,d0
 	ext.l	d4
@@ -3338,9 +3338,9 @@ StarField:
 RotateBuffers_Field:
 	move.l	buffer(a4),d0
 	move.l	clearbuffer(a4),d1
-	move.l	active(a4),d2
+	move.l	Active(a4),d2
 
-	move.l	d0,active(a4)
+	move.l	d0,Active(a4)
 	move.l	d2,clearbuffer(a4)
 	move.l	d1,buffer(a4)
 
@@ -3509,7 +3509,7 @@ vbi_FillIcos:
 
 	bsr.w	SwapBuffers	; tuplapuskurointi
 
-	move.l	active(a4),a0
+	move.l	Active(a4),a0
 	lea	Planes_FillIcos,a1
 	moveq	#40,d0
 	moveq	#3-1,d1
@@ -4024,8 +4024,8 @@ vbi_Writer:
 	move.b	mandelwait1(a4),(a1)
 	move.b	mandelwait2(a4),4(a1)
 
-	move.l	active(a4),a0
-	add.l	BitplaneAdd(a4),a0
+	move.l	Active(a4),a0
+	add.l	BitPlaneAdd(a4),a0
 
 	lea	Planes_Writer,a1
 	moveq	#80,d0
@@ -4103,7 +4103,7 @@ Writer:
 	add.w	d0,a1
 
 
-	move.l	active(a4),a0
+	move.l	Active(a4),a0
 	add.w	#3*80,a0
 	move.w	Line(a4),d0
 	mulu	#80,d0
@@ -4273,7 +4273,7 @@ new_x_position:
 	beq.s	.ok2
 .ok1	addq.b	#1,mandelwait2(a4)
 
-	add.l	#80,BitplaneAdd(a4)
+	add.l	#80,BitPlaneAdd(a4)
 .ok2
 
 	subq.w	#1,mandelcy(a4)
@@ -4308,7 +4308,7 @@ vbi_Slime:
 
 	bsr.w	SwapBuffers	; tuplapuskurointi
 
-	move.l	active(a4),a0
+	move.l	Active(a4),a0
 	lea	Planes_Slime,a1
 	moveq	#40,d0
 	moveq	#3-1,d1
@@ -4867,7 +4867,7 @@ vbi_Glenz:
 
 	bsr.w	SwapBuffers
 
-	move.l	active(a4),a0
+	move.l	Active(a4),a0
 	lea	Planes_Glenz,a1
 	moveq	#40,d0
 	moveq	#4-1,d1
@@ -5290,7 +5290,7 @@ vbi_The_End:
 
 	bsr.w	SwapBuffers
 
-	move.l	active(a4),a0
+	move.l	Active(a4),a0
 	lea	Planes_RGB_Plates,a1
 	moveq	#40,d0
 	moveq	#3-1,d1
