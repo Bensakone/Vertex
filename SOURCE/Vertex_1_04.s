@@ -206,12 +206,12 @@ Main:	bra.s	.ver
 	clr.w	minYOLD(a4)
 	clr.w	xaddOLD(a4)	
 	clr.w	moduloOLD(a4)
-	move.w	#[255*2*64]+20,blitsizeOLD(a4)
+	move.w	#255*2*64+20,blitsizeOLD(a4)
 
 	clr.w	minY(a4)
 	clr.w	xadd(a4)	
 	clr.w	modulo(a4)
-	move.w	#[255*2*64]+20,blitsize(a4)
+	move.w	#255*2*64+20,blitsize(a4)
 
 	lea	bpl3+17920,a0			; memory for scroller
 	lea	Planes_Line,a1
@@ -459,12 +459,12 @@ Main:	bra.s	.ver
 	clr.w	minYOLD(a4)
 	clr.w	xaddOLD(a4)	
 	clr.w	moduloOLD(a4)
-	move.w	#[256*3*64]+20,blitsizeOLD(a4)
+	move.w	#256*3*64+20,blitsizeOLD(a4)
 
 	clr.w	minY(a4)
 	clr.w	xadd(a4)	
 	clr.w	modulo(a4)
-	move.w	#[256*3*64]+20,blitsize(a4)
+	move.w	#256*3*64+20,blitsize(a4)
 
 	lea	plane1,a0
 	move.l	a0,active(a4)
@@ -585,12 +585,12 @@ Main:	bra.s	.ver
 	clr.w	minYOLD(a4)
 	clr.w	xaddOLD(a4)	
 	clr.w	moduloOLD(a4)
-	move.w	#[256*3*64]+20,blitsizeOLD(a4)
+	move.w	#256*3*64+20,blitsizeOLD(a4)
 
 	clr.w	minY(a4)
 	clr.w	xadd(a4)	
 	clr.w	modulo(a4)
-	move.w	#[256*3*64]+20,blitsize(a4)
+	move.w	#256*3*64+20,blitsize(a4)
 
 
 	move.w	#2*315,Xangle(a4)
@@ -780,12 +780,12 @@ Main:	bra.s	.ver
 	clr.w	minYOLD(a4)
 	clr.w	xaddOLD(a4)	
 	clr.w	moduloOLD(a4)
-	move.w	#[256*3*64]+20,blitsizeOLD(a4)
+	move.w	#256*3*64+20,blitsizeOLD(a4)
 
 	clr.w	minY(a4)
 	clr.w	xadd(a4)	
 	clr.w	modulo(a4)
-	move.w	#[256*3*64]+20,blitsize(a4)
+	move.w	#256*3*64+20,blitsize(a4)
 
 	lea	vbi_The_End(pc),a0
 	move.l	a0,$6c
@@ -2502,7 +2502,7 @@ vbi_Vertex:
 	move.l	planebuffer(a4),d0
 	add.l	#40*256,d0
 	move.w	#0,d1
-	move.w	#[64*256]+20,d2
+	move.w	#64*256+20,d2
 
 	bsr	Fill
 
@@ -2812,7 +2812,7 @@ Morph_Grid2Ball:		; oikeammin Grid 2 Munuainen
 
 	move.w	#64,MorphValue(a4)
 	move.l	#ObjConnect_Ball,ObjConnect(a4)
-	move.w	#[84-6]-1,ObjLineNo(a4)
+	move.w	#84-6-1,ObjLineNo(a4)
 	bra.s	.end
 
 .still_morphing
@@ -5296,7 +5296,7 @@ vbi_The_End:
 	move.l	buffer(a4),d0
 	addq.l	#6,d0
 	moveq	#6,d1
-	move.w	#[230*3*64]+17,d2
+	move.w	#230*3*64+17,d2
 	bsr.w	ClearScreen
 
 	cmp.w	#-2,timer(a4)
