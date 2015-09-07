@@ -56,10 +56,6 @@
 ***									***
 ***************************************************************************
 
-	incdir	"../INCLUDE"
-	incdir	"../EXTERN"
-	incdir	"../SND"
-
 	include "custom.i"
 	include "cia.i"
 ***	include "exec/exec_lib.i"
