@@ -74,6 +74,8 @@ RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
 	dw	olddma,oldintena
 	dw	oldcra,oldcrb
 
+	dw	Part
+
 	dl	Buffer,Active,planebuffer,clearbuffer
 
 	dw	boing,boingval
@@ -157,8 +159,86 @@ Main:	bra.s	.ver
 	lea	int13(pc),a0
 	move.l	a0,$78
 
-*** ;;	1 - BORDERED PLANEVECTOR 'OPEN YOUR EYES, NOW!'
+;;; Run all the parts.
+.parts:
+	;; The rules for each part subroutine:
+	;; - can trust a4=bss vars, a6=custom on entry
+	;; - does not have to restore the above
+	;; - must set everything up for themselves
+	;; - must set quitflag=-1 to move on
+	move.w	Part(a4),d0	; part number
+	add.w	#1,Part(a4)
+	lsl.w	#2,d0
+	lea	SetList(pc,d0),a0
+	tst.l	(a0)
+	beq	.CleanUp
+	move.l	(a0),a0
+	jsr	(a0)
+	lea	Bss_Stack,a4	; parts may mess these up
+	lea	custom,a6
 
+.MainLoop
+	;; FIXME: this loop is quite silly
+	cmp.w	#-1,quitflag(a4)
+	beq.w	.GoOn
+
+	IF	DEBUG = 1
+	LeftMouse
+	bne.b	.MainLoop
+	ELSE
+	LeftMouse
+	beq.w	.CleanUp
+	bra.s	.MainLoop
+	ENDC
+.GoOn
+
+	bra	.parts
+
+;;; CLEAN UP ALL THE MESS
+.CleanUp:
+	bsr.w	mt_end
+
+	lea	custom,a6
+	move.l	oldcopper(a4),cop1lch(a6)
+	move.l	oldvbi(a4),$6c
+	move.l	oldint13(a4),$78
+
+	lea	ciab,a5
+	move.b	#$9f,icr(a5)
+	move.b	oldcra(a4),cra(a5)
+	move.b	oldcrb(a4),crb(a5)
+
+	move.w	olddma(a4),d0
+	or.w	#$8000,d0
+	move.w	d0,dmacon(a6)
+
+	move.w	oldintena(a4),d0
+	or.w	#$C000,d0
+	move.w	d0,intena(a6)
+
+	movem.l	(sp)+,d0-a6
+	moveq	#0,d0
+	rts				;-)  And it all ended up so happily...
+
+;;; Parts to show
+SetList:
+	dc.l	Part_OpenYourEyesNow
+	dc.l	Part_IcosahedralLineVector
+	dc.l	Part_LoveKnowItAndFear
+	dc.l	Part_VertexMultiplane
+	dc.l	Part_VectorGridMunuainen
+	dc.l	Part_FieldOfDots
+	dc.l	Part_FakePlasma
+	dc.l	Part_WillesBall
+	dc.l	Part_MandelWriter
+	dc.l	Part_SlimeVector
+	dc.l	Part_DickPic
+	dc.l	Part_Glenz
+	dc.l	Part_TheEnd
+	dc.l	0		; end
+
+;;; BORDERED PLANEVECTOR 'OPEN YOUR EYES, NOW!'
+Part_OpenYourEyesNow:
 	lea	vbi_BPV(pc),a0
 	move.l	a0,$6c
 
@@ -176,26 +256,13 @@ Main:	bra.s	.ver
 	move.l	a0,Active(a4)
 	lea	plane2,a0
 	move.l	a0,Buffer(a4)
-	
 
 	move.w	#%1110000000100000,intena(a6)
 
-.MainLoop
-	cmp.w	#-1,quitflag(a4)
-	beq.w	.GoOn
+	rts
 
-	IF	DEBUG = 1
-	LeftMouse
-	bne.b	.MainLoop
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop
-	ENDC
-.GoOn
-
-*** ;;	2 - A BOUNCH OF LINEVECTORS
-
+;;; A BOUNCH OF LINEVECTORS
+Part_IcosahedralLineVector:
 	move.w	#%0000000000100000,intena(a6)
 
 	bsr	DefineObject_Line
@@ -234,21 +301,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop2
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn2
-	IF	DEBUG = 1
-	RightMouse
-	bne.b	.MainLoop2
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop2
-	ENDC
-.GoOn2
+	rts
 
-*** ;;	3 - FUNNY (?) TEXT
-
+;;; FUNNY (?) TEXT
+Part_LoveKnowItAndFear:
 	move.w	#%0000000000100000,intena(a6)
 
 	clr.w	quitflag(a4)
@@ -266,25 +322,12 @@ Main:	bra.s	.ver
 	move.w	#64*44*1+40,d2
 	bsr	ClearScreen
 
-
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop3
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn3
-	IF	DEBUG = 1
-	LeftMouse
-	bne.b	.MainLoop3
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop3
-	ENDC
-.GoOn3
+	rts
 
-
-*** ;;	4 - VERTEX MULTIPLANE
-
+;;; VERTEX MULTIPLANE
+Part_VertexMultiplane:
 	move.w	#%0000000000100000,intena(a6)
 
 	clr.w	timer(a4)
@@ -311,21 +354,10 @@ Main:	bra.s	.ver
 	
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop4
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn4
-	IF	DEBUG = 1
-	RightMouse
-	bne.b	.MainLoop4
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop4
-	ENDC
-.GoOn4
+	rts
 
-*** ;;	5 - VECTORGRID WITH MORPH TO A MUNUAINEN
-
+;;; VECTORGRID WITH MORPH TO A MUNUAINEN
+Part_VectorGridMunuainen:
 	move.w	#%0000000000100000,intena(a6)
 
 	clr.w	quitflag(a4)
@@ -348,21 +380,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop5
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn5
-	IF	DEBUG = 1
-	LeftMouse
-	bne.b	.MainLoop5
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop5
-	ENDC
-.GoOn5
+	rts
 
-*** ;;	6 - FIELD OF DOTS
-
+;;; FIELD OF DOTS
+Part_FieldOfDots:
 	move.w	#%0000000000100000,intena(a6)
 
 	bsr	CreateObject
@@ -400,21 +421,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop6
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn6
-	IF	DEBUG = 1
-	RightMouse
-	bne.b	.MainLoop6
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop6
-	ENDC
-.GoOn6
+	rts
 
-*** ;;	7 - 5BPL FAKED MEMORYPICTURE COLORSCOLL PLASMA EFFECT IN 5 RASTERLINES
-
+;;; 5BPL FAKED MEMORYPICTURE COLORSCOLL PLASMA EFFECT IN 5 RASTERLINES
+Part_FakePlasma:
 	move.w	#%0000000000100000,intena(a6)
 
 	lea	vbi_Plasma(pc),a0
@@ -433,22 +443,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop7
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn7
-	IF	DEBUG = 1
-	LeftMouse
-	bne.b	.MainLoop7
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop7
-	ENDC
-.GoOn7
+	rts
 
-
-*** ;;	8 - FILLED VECTOR ICOS & WILLESBALL
-
+;;; FILLED VECTOR ICOS & WILLESBALL
+Part_WillesBall:
 	move.w	#%0000000000100000,intena(a6)
 
 	bsr.w	DefineObject_FillIcos
@@ -480,22 +478,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop8
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn8
-	IF	DEBUG = 1
-	RightMouse
-	bne.b	.MainLoop8
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop8
-	ENDC
-.GoOn8
+	rts
 
-
-*** ;;	9 - MANDELWRITER
-
+;;; MANDELWRITER
+Part_MandelWriter:
 	move.w	#%0000000000100000,intena(a6)
 
 	move.b	#$2c,mandelwait1(a4)
@@ -546,22 +532,10 @@ Main:	bra.s	.ver
 
 	bsr	Mandelbrot
 
+	rts
 
-.MainLoop9
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn9
-	IF	DEBUG = 1
-	RightMouse
-	bne.b	.MainLoop9
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop9
-	ENDC
-.GoOn9
-
-*** ;;	10 - SLIME
-
+;;; SLIME
+Part_SlimeVector:
 	move.w	#%0000000000100000,intena(a6)
 
 	lea	plane1,a0
@@ -641,21 +615,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop10
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn10
-	IF	DEBUG = 1
-	LeftMouse
-	bne.b	.MainLoop10
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop10
-	ENDC
-.GoOn10
+	rts
 
-*** ;;	11 - DICK
-
+;;; DICK
+Part_DickPic:
 	move.w	#%0000000000100000,intena(a6)
 
 	move.w	#130,FadeValue(a4)
@@ -670,21 +633,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoop11
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn11
-	IF	DEBUG = 1
-	RightMouse
-	bne.b	.MainLoop11
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop11
-	ENDC
-.GoOn11
+	rts
 
-*** ;;	12 - JELLO GLENZ
-
+;;; JELLO GLENZ
+Part_Glenz:
 	move.w	#%0000000000100000,intena(a6)
 
 	lea	plane1,a0
@@ -740,22 +692,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
+	rts
 
-.MainLoop12
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.GoOn12
-	IF	DEBUG = 1
-	LeftMouse
-	bne.b	.MainLoop12
-	ELSE
-	LeftMouse
-	beq.w	.CleanUp
-	bra.s	.MainLoop12
-	ENDC
-.GoOn12
-
-*** ;;	13 - THE END TEXT
-
+;;; THE END TEXT
+Part_TheEnd:
 	move.w	#%0000000000100000,intena(a6)
 
 	lea	End_Text_Pic,a0		; kuva public memoryssa
@@ -805,47 +745,7 @@ Main:	bra.s	.ver
 
 	move.w	#%1000000000100000,intena(a6)
 
-.MainLoopEnd
-	cmp.w	#-1,quitflag(a4)
-	beq.s	.CleanUp
-	IF	DEBUG = 1			; this final debug
-	RightMouse				; added in v1.01
-	bne.w	.MainLoopEnd
-	ELSE
-	LeftMouse
-	bne.w	.MainLoopEnd
-	ENDC
-
-*** ;;	14 - CLEAN UP ALL THE MESS
-
-.CleanUp
-	bsr.w	mt_end
-
-	lea	custom,a6
-	move.l	oldcopper(a4),cop1lch(a6)
-	move.l	oldvbi(a4),$6c
-	move.l	oldint13(a4),$78
-
-	lea	ciab,a5
-	move.b	#$9f,icr(a5)
-	move.b	oldcra(a4),cra(a5)
-	move.b	oldcrb(a4),crb(a5)
-
-	move.w	olddma(a4),d0
-	or.w	#$8000,d0
-	move.w	d0,dmacon(a6)
-
-	move.w	oldintena(a4),d0
-	or.w	#$C000,d0
-	move.w	d0,intena(a6)
-
-	movem.l	(sp)+,d0-a6
-	moveq	#0,d0
-	rts				;-)  And it all ended up so happily...
-
-
-
-
+	rts
 
 
 ***	CIAB musansoittokeskeytys - tosin ei cia-playerillä...
