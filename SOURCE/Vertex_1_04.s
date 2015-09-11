@@ -159,6 +159,8 @@ Main:	bra.s	.ver
 	lea	int13(pc),a0
 	move.l	a0,$78
 
+	bsr.w	mt_init
+
 ;;; Run all the parts.
 .parts:
 	;; The rules for each part subroutine:
@@ -245,8 +247,6 @@ Part_OpenYourEyesNow:
 	lea	CopperList_BPV,a0
 	move.l  a0,cop1lch(a6)
 
-
-	bsr.w	mt_init
 	bsr	DefineObject_Open
 
 	move.w	#1,obenumber(a4)
