@@ -1,4 +1,5 @@
-AS=$(HOME)/src/vasm/vasmm68k_mot
+AS=toolchain/vasm/vasmm68k_mot
+LD=toolchain/vlink/vlink
 FSUAE=fs-uae
 
 Vertex2015: SOURCE/Vertex_1_04.s Makefile
@@ -11,4 +12,7 @@ run: Vertex2015
 clean:
 	rm -f Vertex2015 run/Vertex2015
 
-.PHONY: run clean
+toolchain:
+	make -C $@
+
+.PHONY: run clean toolchain
