@@ -247,6 +247,10 @@ int13:	move.l	d0,-(sp)
 	move.l	(sp)+,d0
 	rte
 
+
+***    Kaikki vblank-keskeytykset ja rutiinit eri osioihin
+
+
 ;;; BORDERED PLANEVECTOR 'OPEN YOUR EYES, NOW!'
 Part_OpenYourEyesNow:
 	lea	vbi_BPV(pc),a0
@@ -268,500 +272,6 @@ Part_OpenYourEyesNow:
 	move.w	#%1110000000100000,intena(a6)
 
 	rts
-
-;;; A BOUNCH OF LINEVECTORS
-Part_IcosahedralLineVector:
-	move.w	#%0000000000100000,intena(a6)
-
-	bsr	DefineObject_Line
-
-	clr.w	minYOLD(a4)
-	clr.w	xaddOLD(a4)	
-	clr.w	moduloOLD(a4)
-	move.w	#255*2*64+20,blitsizeOLD(a4)
-
-	clr.w	minY(a4)
-	clr.w	xadd(a4)	
-	clr.w	modulo(a4)
-	move.w	#255*2*64+20,blitsize(a4)
-
-	lea	bpl3+17920,a0			; memory for scroller
-	lea	Planes_Line,a1
-	moveq	#44,d0
-	moveq	#1-1,d1
-	bsr.w	SetPlanes
-
-	lea	bpl3+17920,a0			; memory for scroller
-	lea	Planes_Wille2,a1
-	moveq	#44,d0
-	moveq	#1-1,d1
-	bsr.w	SetPlanes
-
-	lea	vbi_Line(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_Line,a0
-	move.l  a0,cop1lch(a6)
-	clr.w	quitflag(a4)
-	
-	lea	text(pc),a0
-	move.l	a0,scrollpointer(a4)
-	move.w	#10,ScrollOdotus(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; FUNNY (?) TEXT
-Part_LoveKnowItAndFear:
-	move.w	#%0000000000100000,intena(a6)
-
-	clr.w	quitflag(a4)
-	lea	vbi_FunnyText(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_FunnyText,a0
-	move.l  a0,cop1lch(a6)
-
-	move.w	#9,Joka(a4)
-	move.w	#136,FadeValue(a4)
-	move.l	#-44*28,FunnyPointer(a4)
-
-	move.l	#plane1,d0
-	moveq	#0,d1
-	move.w	#64*44*1+40,d2
-	bsr	ClearScreen
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; VERTEX MULTIPLANE
-Part_VertexMultiplane:
-	move.w	#%0000000000100000,intena(a6)
-
-	clr.w	timer(a4)
-
-	clr.w	FadeValue(a4)
-
-	clr.w	Xangle(a4)
-	clr.w	Yangle(a4)
-	clr.w	Zangle(a4)
-
-	clr.w	quitflag(a4)
-
-	bsr	DefineObject_Vertex
-
-	bsr	SetOrders_MLV
-
-	move.w	#-2*20,anus_ptr(a4)
-
-	clr.w	framepointer(a4)
-	lea	vbi_Vertex(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_Vertex,a0
-	move.l  a0,cop1lch(a6)
-	
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; VECTORGRID WITH MORPH TO A MUNUAINEN
-Part_VectorGridMunuainen:
-	move.w	#%0000000000100000,intena(a6)
-
-	clr.w	quitflag(a4)
-	move.w	#0,FadeValue(a4)
-
-	bsr	SetOrders_MLV
-	bsr	DefineObject_Grid
-
-	lea	plane1,a0
-	move.l	a0,d0
-	moveq	#0,d1
-	move.w	#64*255*4+20,d2
-	bsr	ClearScreen
-
-	lea	vbi_Grid(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_Grid,a0
-	move.l  a0,cop1lch(a6)
-	clr.w	timer(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; FIELD OF DOTS
-Part_FieldOfDots:
-	move.w	#%0000000000100000,intena(a6)
-
-	bsr	CreateObject
-
-	lea	bpl1,a0
-	move.l	a0,Active(a4)
-
-	lea	bpl2,a0
-	move.l	a0,Buffer(a4)
-	move.l	a0,d0
-	moveq	#20,d1
-	move.w	#64*270*2+22,d2
-	bsr	ClearScreen
-
-	lea	bpl3,a0
-	move.l	a0,clearbuffer(a4)
-	move.l	a0,d0
-	moveq	#20,d1
-	move.w	#64*270*2+22,d2
-	bsr	ClearScreen
-
-	move.w	#2000,Distance(a4)
-	move.w	#CLOSER,flag(a4)
-
-	clr.w	Yangle(a4)
-
-	clr.w	timer(a4)
-	clr.w	FadeValue(a4)
-
-	lea	vbi_Field(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_Field,a0
-	move.l  a0,cop1lch(a6)
-	clr.w	quitflag(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; 5BPL FAKED MEMORYPICTURE COLORSCOLL PLASMA EFFECT IN 5 RASTERLINES
-Part_FakePlasma:
-	move.w	#%0000000000100000,intena(a6)
-
-	lea	vbi_Plasma(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_Plasma,a0
-	move.l  a0,cop1lch(a6)
-	
-	clr.w	quitflag(a4)
-	clr.w	timer(a4)
-
-	lea	plasma,a0
-	lea	Planes_Plasma,a1
-	moveq	#40,d0
-	moveq	#5-1,d1
-	bsr	SetPlanes
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; FILLED VECTOR ICOS & WILLESBALL
-Part_WillesBall:
-	move.w	#%0000000000100000,intena(a6)
-
-	bsr.w	DefineObject_FillIcos
-
-	clr.w	minYOLD(a4)
-	clr.w	xaddOLD(a4)	
-	clr.w	moduloOLD(a4)
-	move.w	#256*3*64+20,blitsizeOLD(a4)
-
-	clr.w	minY(a4)
-	clr.w	xadd(a4)	
-	clr.w	modulo(a4)
-	move.w	#256*3*64+20,blitsize(a4)
-
-	lea	plane1,a0
-	move.l	a0,Active(a4)
-	lea	plane2,a0
-	move.l	a0,Buffer(a4)
-
-	lea	vbi_FillIcos(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_FillIcos,a0
-	move.l  a0,cop1lch(a6)
-	clr.w	quitflag(a4)
-	clr.w	Zangle(a4)
-	clr.w	Yangle(a4)
-	clr.w	Xangle(a4)
-	clr.w	timer(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; MANDELWRITER
-Part_MandelWriter:
-	move.w	#%0000000000100000,intena(a6)
-
-	move.b	#$2c,mandelwait1(a4)
-	move.b	#$2d,mandelwait2(a4)
-	move.l	#80,BitPlaneAdd(a4)
-
-	move.w	#130,FadeValue(a4)
-
-	lea	plane2,a0
-	move.l	a0,d0
-	moveq	#0,d1
-	move.w	#64*3*256+20,d2
-	bsr	ClearScreen
-
-	add.l	#256*40*3,d0
-	move.w	#64*2*256+20,d2
-	bsr	ClearScreen
-
-	lea	Planes_Mandel,a1
-	moveq	#40,d0
-	moveq	#5-1,d1
-	bsr.w	SetPlanes
-
-	lea	writertext(pc),a0
-	move.l	a0,scrollpointer(a4)
-
-	move.w	#10,PrintSpeed(a4)
-
-	clr.w	quitflag(a4)
-
-	lea	plane1,a0
-	move.l	a0,Active(a4)
-
-	move.l	a0,d0
-	moveq	#0,d1
-	move.w	#64*256+40,d2
-	bsr	ClearScreen
-
-	lea	vbi_Writer(pc),a0
-	move.l	a0,$6c
-
-	lea	CopperList_Mandel,a0
-	move.l  a0,cop1lch(a6)
-
-	clr.w	timer(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	bsr	Mandelbrot
-
-	rts
-
-;;; SLIME
-Part_SlimeVector:
-	move.w	#%0000000000100000,intena(a6)
-
-	lea	plane1,a0
-	move.l	a0,Active(a4)
-
-	move.l	a0,d0
-	moveq.l	#0,d1
-	move.w	#64*256*3+20,d2
-	bsr	ClearScreen
-
-	lea	plane2,a0
-	move.l	a0,Buffer(a4)
-	move.l	a0,d0
-	bsr	ClearScreen
-
-	bsr.w	DefineObject_Slime
-
-	clr.w	minYOLD(a4)
-	clr.w	xaddOLD(a4)	
-	clr.w	moduloOLD(a4)
-	move.w	#256*3*64+20,blitsizeOLD(a4)
-
-	clr.w	minY(a4)
-	clr.w	xadd(a4)	
-	clr.w	modulo(a4)
-	move.w	#256*3*64+20,blitsize(a4)
-
-
-	move.w	#2*315,Xangle(a4)
-	move.w	#2*45,Yangle(a4)
-	move.w	#2*225,Zangle(a4)
-
-	clr.w	anus_ptr(a4)
-	clr.w	FadeValue(a4)
-	
-	lea	Sine,a0
-.aloop	move.w	(a0),d0
-	cmp.w	#$1234,d0
-	beq.s	.lop
-	asr.w	#1,d0
-	move.w	d0,d1
-	asl.w	#4,d0
-	or.w	d1,d0
-	move.w	d0,(a0)+
-	bra	.aloop
-.lop
-
-	lea	Sine,a0
-	lea	CSpace,a1
-	move.l	#$2a11fffe,d0
-	move.w	#bplcon1,d1
-	move.w	#256-1,d7
-.bloop
-	move.l	d0,(a1)+		; odotus
-	move.w	d1,(a1)+		; bplcon1
-	move.w	(a0)+,d2		; sine
-	cmp.w	#$1234,d2
-	bne.s	.yli2
-	lea	Sine,a0
-	move.w	(a0)+,d2
-.yli2
-	move.w	d2,(a1)+
-	add.l	#$1000000,d0
-
-	dbf	d7,.bloop
-
-	move.l	#-2,(a1)
-
-
-	lea	vbi_Slime(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_Slime,a0
-	move.l  a0,cop1lch(a6)
-
-	clr.w	quitflag(a4)
-	clr.w	timer(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; DICK
-Part_DickPic:
-	move.w	#%0000000000100000,intena(a6)
-
-	move.w	#130,FadeValue(a4)
-
-	lea	vbi_Dick(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_Dick,a0
-	move.l  a0,cop1lch(a6)
-
-	clr.w	timer(a4)
-	clr.w	quitflag(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; JELLO GLENZ
-Part_Glenz:
-	move.w	#%0000000000100000,intena(a6)
-
-	lea	plane1,a0
-	move.l	a0,Active(a4)
-	move.l	a0,d0
-	moveq	#0,d1
-	move.w	#64*2*256+40,d2
-	bsr	ClearScreen
-
-	add.l	#40*256*2,d0
-	bsr	ClearScreen
-
-	lea	plane2,a0
-	move.l	a0,Buffer(a4)
-
-	move.l	a0,d0
-	moveq	#0,d1
-	move.w	#64*2*256+40,d2
-	bsr	ClearScreen
-
-	add.l	#40*256*2,d0
-	bsr	ClearScreen
-
-	move.w	#-2*20,anus_ptr(a4)
-
-	bsr.w	DefineObject_Glenz
-
-	clr.w	minYOLD(a4)
-	clr.w	xaddOLD(a4)	
-	clr.w	moduloOLD(a4)
-	move.w	#255*4*64+20,blitsizeOLD(a4)
-
-	clr.w	minY(a4)
-	clr.w	xadd(a4)	
-	clr.w	modulo(a4)
-	move.w	#255*4*64+20,blitsize(a4)
-
-	clr.w	x_sin_pointer(a4)
-	clr.w	y_sin_pointer(a4)
-
-	clr.w	Zangle(a4)
-	clr.w	Yangle(a4)
-	clr.w	Xangle(a4)
-
-	clr.w	FadeValue(a4)
-
-	lea	vbi_Glenz(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_Glenz,a0
-	move.l  a0,cop1lch(a6)
-	clr.w	quitflag(a4)
-	clr.w	timer(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-;;; THE END TEXT
-Part_TheEnd:
-	move.w	#%0000000000100000,intena(a6)
-
-	lea	End_Text_Pic,a0		; kuva public memoryssa
-	lea	bpl3+3840,a1
-	move.w	#26800/4-1,d7
-.cloopc
-	move.l	(a0)+,(a1)+
-	dbf	d7,.cloopc
-
-	lea	plane1,a0
-;	add.w	#40*10*3,a0		; removed in v1.01
-	move.l	a0,Active(a4)
-	lea	plane2,a0
-;	add.w	#40*10*3,a0		; removed in v1.01
-	move.l	a0,Buffer(a4)
-
-	bsr	DefineObject_The_End
-
-	clr.w	minYOLD(a4)
-	clr.w	xaddOLD(a4)	
-	clr.w	moduloOLD(a4)
-	move.w	#256*3*64+20,blitsizeOLD(a4)
-
-	clr.w	minY(a4)
-	clr.w	xadd(a4)	
-	clr.w	modulo(a4)
-	move.w	#256*3*64+20,blitsize(a4)
-
-	lea	vbi_The_End(pc),a0
-	move.l	a0,$6c
-	lea	CopperList_The_End,a0
-	move.l  a0,cop1lch(a6)
-	
-	move.w	#0,vposw(a6)
-
-;	move.l	#-207*80,End_Text_Ptr(a4)	; changed in v1.01
-	move.l	#-203*80,End_Text_Ptr(a4)	; (a bug fix)
-
-	clr.w	quitflag(a4)
-	clr.w	FadeValue(a4)			; added in v1.01
-
-	clr.w	timer(a4)
-
-	clr.w	Xangle(a4)
-	clr.w	Yangle(a4)
-	clr.w	Zangle(a4)
-
-	move.w	#%1000000000100000,intena(a6)
-
-	rts
-
-
-***	Kaikki vblank-keskeytykset ja rutiinit eri osioihin
-
-
-***************************************************************************
-***	;; OSIO YKSI: BORDERED PLANEVECTOR 'OPEN YOUR EYES, NOW!'	***
-***************************************************************************
 
 vbi_BPV:
 	movem.l d0-a6,-(sp)
@@ -1080,10 +590,47 @@ drawline_f_BPV:
 	dc.b 20+3
 
 
-***************************************************************************
-***	;; OSIO KAKSI: A BOUNCH OF LINEVECTORS				***
-***************************************************************************
+;;; A BOUNCH OF LINEVECTORS
+Part_IcosahedralLineVector:
+	move.w	#%0000000000100000,intena(a6)
 
+	bsr	DefineObject_Line
+
+	clr.w	minYOLD(a4)
+	clr.w	xaddOLD(a4)
+	clr.w	moduloOLD(a4)
+	move.w	#255*2*64+20,blitsizeOLD(a4)
+
+	clr.w	minY(a4)
+	clr.w	xadd(a4)
+	clr.w	modulo(a4)
+	move.w	#255*2*64+20,blitsize(a4)
+
+	lea	bpl3+17920,a0			; memory for scroller
+	lea	Planes_Line,a1
+	moveq	#44,d0
+	moveq	#1-1,d1
+	bsr.w	SetPlanes
+
+	lea	bpl3+17920,a0			; memory for scroller
+	lea	Planes_Wille2,a1
+	moveq	#44,d0
+	moveq	#1-1,d1
+	bsr.w	SetPlanes
+
+	lea	vbi_Line(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_Line,a0
+	move.l  a0,cop1lch(a6)
+	clr.w	quitflag(a4)
+
+	lea	text(pc),a0
+	move.l	a0,scrollpointer(a4)
+	move.w	#10,ScrollOdotus(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_Line:
 	movem.l d0-a6,-(sp)
@@ -2082,10 +1629,28 @@ DrawLine:
 	dc.b	%00011001	; 
 
 
+;;; FUNNY (?) TEXT
+Part_LoveKnowItAndFear:
+	move.w	#%0000000000100000,intena(a6)
 
-***************************************************************************
-***	;; OSIO KOLME: FUNNY (?) TEXT					***
-***************************************************************************
+	clr.w	quitflag(a4)
+	lea	vbi_FunnyText(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_FunnyText,a0
+	move.l  a0,cop1lch(a6)
+
+	move.w	#9,Joka(a4)
+	move.w	#136,FadeValue(a4)
+	move.l	#-44*28,FunnyPointer(a4)
+
+	move.l	#plane1,d0
+	moveq	#0,d1
+	move.w	#64*44*1+40,d2
+	bsr	ClearScreen
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_FunnyText:
 	movem.l	d0-d7/a0-a6,-(sp)
@@ -2211,11 +1776,37 @@ BlitBob:
 	move.w	d6,bltsize(a6)
 	rts
 
-***************************************************************************
-***	;; OSIO NELJÄ: VERTEX MULTIPLANE				***
-***************************************************************************
 
-***	älä koske tai tulee turpiin!!!
+;;; VERTEX MULTIPLANE
+;;; ***	älä koske tai tulee turpiin!!!
+Part_VertexMultiplane:
+	move.w	#%0000000000100000,intena(a6)
+
+	clr.w	timer(a4)
+
+	clr.w	FadeValue(a4)
+
+	clr.w	Xangle(a4)
+	clr.w	Yangle(a4)
+	clr.w	Zangle(a4)
+
+	clr.w	quitflag(a4)
+
+	bsr	DefineObject_Vertex
+
+	bsr	SetOrders_MLV
+
+	move.w	#-2*20,anus_ptr(a4)
+
+	clr.w	framepointer(a4)
+	lea	vbi_Vertex(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_Vertex,a0
+	move.l  a0,cop1lch(a6)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_Vertex:
 	movem.l d0-a6,-(sp)
@@ -2510,11 +2101,31 @@ DefineObject_Vertex:
 	rts
 
 
-***************************************************************************
-***	;; OSIO VIISI: VECTORGRID					***
-***************************************************************************
+;;; VECTORGRID WITH MORPH TO A MUNUAINEN
+Part_VectorGridMunuainen:
+	move.w	#%0000000000100000,intena(a6)
 
+	clr.w	quitflag(a4)
+	move.w	#0,FadeValue(a4)
 
+	bsr	SetOrders_MLV
+	bsr	DefineObject_Grid
+
+	lea	plane1,a0
+	move.l	a0,d0
+	moveq	#0,d1
+	move.w	#64*255*4+20,d2
+	bsr	ClearScreen
+
+	lea	vbi_Grid(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_Grid,a0
+	move.l  a0,cop1lch(a6)
+	clr.w	timer(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_Grid:
 	movem.l d0-a6,-(sp)
@@ -2925,9 +2536,46 @@ DefineObject_Grid:
 	rts
 
 
-***************************************************************************
-***	;; OSIO KUUSI: FIELD OF DOTS					***
-***************************************************************************
+;;; FIELD OF DOTS
+Part_FieldOfDots:
+	move.w	#%0000000000100000,intena(a6)
+
+	bsr	CreateObject
+
+	lea	bpl1,a0
+	move.l	a0,Active(a4)
+
+	lea	bpl2,a0
+	move.l	a0,Buffer(a4)
+	move.l	a0,d0
+	moveq	#20,d1
+	move.w	#64*270*2+22,d2
+	bsr	ClearScreen
+
+	lea	bpl3,a0
+	move.l	a0,clearbuffer(a4)
+	move.l	a0,d0
+	moveq	#20,d1
+	move.w	#64*270*2+22,d2
+	bsr	ClearScreen
+
+	move.w	#2000,Distance(a4)
+	move.w	#CLOSER,flag(a4)
+
+	clr.w	Yangle(a4)
+
+	clr.w	timer(a4)
+	clr.w	FadeValue(a4)
+
+	lea	vbi_Field(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_Field,a0
+	move.l  a0,cop1lch(a6)
+	clr.w	quitflag(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 QUIT	= -1
 STAY	= 1
@@ -3245,9 +2893,28 @@ RotateBuffers_Field:
 	;	unbeatable!
 	;		- J
 
-***************************************************************************
-***	;; OSIO SEITSEMÄN: REALTIME 5-RASTERLINE PLASMA			***
-***************************************************************************
+
+;;; 5BPL FAKED MEMORYPICTURE COLORSCOLL PLASMA EFFECT IN 5 RASTERLINES
+Part_FakePlasma:
+	move.w	#%0000000000100000,intena(a6)
+
+	lea	vbi_Plasma(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_Plasma,a0
+	move.l  a0,cop1lch(a6)
+
+	clr.w	quitflag(a4)
+	clr.w	timer(a4)
+
+	lea	plasma,a0
+	lea	Planes_Plasma,a1
+	moveq	#40,d0
+	moveq	#5-1,d1
+	bsr	SetPlanes
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_Plasma:
 	movem.l d0-a6,-(sp)
@@ -3349,14 +3016,41 @@ CycleColors:
 	rts
 
 
+;;; FILLED VECTOR ICOS & WILLESBALL
+;;; Willesball is dedicated to our good friend, Wille Wahe
+Part_WillesBall:
+	move.w	#%0000000000100000,intena(a6)
 
-	;	Willesball is dedicated to our good friend, Wille Wahe
+	bsr.w	DefineObject_FillIcos
 
+	clr.w	minYOLD(a4)
+	clr.w	xaddOLD(a4)
+	clr.w	moduloOLD(a4)
+	move.w	#256*3*64+20,blitsizeOLD(a4)
 
-***************************************************************************
-***	;; OSIO KAHDEKSAN: WILLE & NORMAALI				***
-***************************************************************************
+	clr.w	minY(a4)
+	clr.w	xadd(a4)
+	clr.w	modulo(a4)
+	move.w	#256*3*64+20,blitsize(a4)
 
+	lea	plane1,a0
+	move.l	a0,Active(a4)
+	lea	plane2,a0
+	move.l	a0,Buffer(a4)
+
+	lea	vbi_FillIcos(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_FillIcos,a0
+	move.l  a0,cop1lch(a6)
+	clr.w	quitflag(a4)
+	clr.w	Zangle(a4)
+	clr.w	Yangle(a4)
+	clr.w	Xangle(a4)
+	clr.w	timer(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_FillIcos:
 	movem.l d0-d7/a0-a6,-(sp)
@@ -3849,10 +3543,59 @@ drawline_FillIcos:
 	dc.b 20+3
 
 
+;;; MANDELWRITER
+Part_MandelWriter:
+	move.w	#%0000000000100000,intena(a6)
 
-***************************************************************************
-***	;; OSIO YHDEKSÄN: MANDELWRITER					***
-***************************************************************************
+	move.b	#$2c,mandelwait1(a4)
+	move.b	#$2d,mandelwait2(a4)
+	move.l	#80,BitPlaneAdd(a4)
+
+	move.w	#130,FadeValue(a4)
+
+	lea	plane2,a0
+	move.l	a0,d0
+	moveq	#0,d1
+	move.w	#64*3*256+20,d2
+	bsr	ClearScreen
+
+	add.l	#256*40*3,d0
+	move.w	#64*2*256+20,d2
+	bsr	ClearScreen
+
+	lea	Planes_Mandel,a1
+	moveq	#40,d0
+	moveq	#5-1,d1
+	bsr.w	SetPlanes
+
+	lea	writertext(pc),a0
+	move.l	a0,scrollpointer(a4)
+
+	move.w	#10,PrintSpeed(a4)
+
+	clr.w	quitflag(a4)
+
+	lea	plane1,a0
+	move.l	a0,Active(a4)
+
+	move.l	a0,d0
+	moveq	#0,d1
+	move.w	#64*256+40,d2
+	bsr	ClearScreen
+
+	lea	vbi_Writer(pc),a0
+	move.l	a0,$6c
+
+	lea	CopperList_Mandel,a0
+	move.l  a0,cop1lch(a6)
+
+	clr.w	timer(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	bsr	Mandelbrot
+
+	rts
 
 vbi_Writer:
 	movem.l	d0-d7/a0-a6,-(sp)
@@ -4152,10 +3895,88 @@ new_x_position:
 	rts
 
 
-***************************************************************************
-***	;; OSIO KYMMENEN: SLIME						***
-***************************************************************************
+;;; SLIME
+Part_SlimeVector:
+	move.w	#%0000000000100000,intena(a6)
 
+	lea	plane1,a0
+	move.l	a0,Active(a4)
+
+	move.l	a0,d0
+	moveq.l	#0,d1
+	move.w	#64*256*3+20,d2
+	bsr	ClearScreen
+
+	lea	plane2,a0
+	move.l	a0,Buffer(a4)
+	move.l	a0,d0
+	bsr	ClearScreen
+
+	bsr.w	DefineObject_Slime
+
+	clr.w	minYOLD(a4)
+	clr.w	xaddOLD(a4)
+	clr.w	moduloOLD(a4)
+	move.w	#256*3*64+20,blitsizeOLD(a4)
+
+	clr.w	minY(a4)
+	clr.w	xadd(a4)
+	clr.w	modulo(a4)
+	move.w	#256*3*64+20,blitsize(a4)
+
+
+	move.w	#2*315,Xangle(a4)
+	move.w	#2*45,Yangle(a4)
+	move.w	#2*225,Zangle(a4)
+
+	clr.w	anus_ptr(a4)
+	clr.w	FadeValue(a4)
+
+	lea	Sine,a0
+.aloop	move.w	(a0),d0
+	cmp.w	#$1234,d0
+	beq.s	.lop
+	asr.w	#1,d0
+	move.w	d0,d1
+	asl.w	#4,d0
+	or.w	d1,d0
+	move.w	d0,(a0)+
+	bra	.aloop
+.lop
+
+	lea	Sine,a0
+	lea	CSpace,a1
+	move.l	#$2a11fffe,d0
+	move.w	#bplcon1,d1
+	move.w	#256-1,d7
+.bloop
+	move.l	d0,(a1)+		; odotus
+	move.w	d1,(a1)+		; bplcon1
+	move.w	(a0)+,d2		; sine
+	cmp.w	#$1234,d2
+	bne.s	.yli2
+	lea	Sine,a0
+	move.w	(a0)+,d2
+.yli2
+	move.w	d2,(a1)+
+	add.l	#$1000000,d0
+
+	dbf	d7,.bloop
+
+	move.l	#-2,(a1)
+
+
+	lea	vbi_Slime(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_Slime,a0
+	move.l  a0,cop1lch(a6)
+
+	clr.w	quitflag(a4)
+	clr.w	timer(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_Slime:
 	movem.l d0-d7/a0-a6,-(sp)
@@ -4498,10 +4319,24 @@ FillScreen_Slime:
 	rts		;-)
 
 
-***************************************************************************
-***	;; OSIO YKSITOISTA: DICK					***
-***************************************************************************
-	
+;;; DICK
+Part_DickPic:
+	move.w	#%0000000000100000,intena(a6)
+
+	move.w	#130,FadeValue(a4)
+
+	lea	vbi_Dick(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_Dick,a0
+	move.l  a0,cop1lch(a6)
+
+	clr.w	timer(a4)
+	clr.w	quitflag(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
+
 vbi_Dick:
 	movem.l	d0-d7/a0-a6,-(sp)
 	lea	custom,a6
@@ -4712,9 +4547,64 @@ mutka:
 	;	- Maverick 
 
 
-***************************************************************************
-***	;; OSIO KAKSITOISTA: JELLO GLENZ				***
-***************************************************************************
+;;; JELLO GLENZ
+Part_Glenz:
+	move.w	#%0000000000100000,intena(a6)
+
+	lea	plane1,a0
+	move.l	a0,Active(a4)
+	move.l	a0,d0
+	moveq	#0,d1
+	move.w	#64*2*256+40,d2
+	bsr	ClearScreen
+
+	add.l	#40*256*2,d0
+	bsr	ClearScreen
+
+	lea	plane2,a0
+	move.l	a0,Buffer(a4)
+
+	move.l	a0,d0
+	moveq	#0,d1
+	move.w	#64*2*256+40,d2
+	bsr	ClearScreen
+
+	add.l	#40*256*2,d0
+	bsr	ClearScreen
+
+	move.w	#-2*20,anus_ptr(a4)
+
+	bsr.w	DefineObject_Glenz
+
+	clr.w	minYOLD(a4)
+	clr.w	xaddOLD(a4)
+	clr.w	moduloOLD(a4)
+	move.w	#255*4*64+20,blitsizeOLD(a4)
+
+	clr.w	minY(a4)
+	clr.w	xadd(a4)
+	clr.w	modulo(a4)
+	move.w	#255*4*64+20,blitsize(a4)
+
+	clr.w	x_sin_pointer(a4)
+	clr.w	y_sin_pointer(a4)
+
+	clr.w	Zangle(a4)
+	clr.w	Yangle(a4)
+	clr.w	Xangle(a4)
+
+	clr.w	FadeValue(a4)
+
+	lea	vbi_Glenz(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_Glenz,a0
+	move.l  a0,cop1lch(a6)
+	clr.w	quitflag(a4)
+	clr.w	timer(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_Glenz:
 	movem.l d0-d7/a0-a6,-(sp)
@@ -5123,10 +5013,6 @@ drawline_Glenz:
 	dc.b 20+3
 
 
-***************************************************************************
-***	;; OSIO KOLMETOISTA: THE END					***
-***************************************************************************
-
 	; it's a hack! it's a plane! No, it's Superman!!
 
 
@@ -5140,6 +5026,59 @@ drawline_Glenz:
 	; rauhaan!
 	;	-J
 
+
+;;; THE END TEXT
+Part_TheEnd:
+	move.w	#%0000000000100000,intena(a6)
+
+	lea	End_Text_Pic,a0		; kuva public memoryssa
+	lea	bpl3+3840,a1
+	move.w	#26800/4-1,d7
+.cloopc
+	move.l	(a0)+,(a1)+
+	dbf	d7,.cloopc
+
+	lea	plane1,a0
+;	add.w	#40*10*3,a0		; removed in v1.01
+	move.l	a0,Active(a4)
+	lea	plane2,a0
+;	add.w	#40*10*3,a0		; removed in v1.01
+	move.l	a0,Buffer(a4)
+
+	bsr	DefineObject_The_End
+
+	clr.w	minYOLD(a4)
+	clr.w	xaddOLD(a4)
+	clr.w	moduloOLD(a4)
+	move.w	#256*3*64+20,blitsizeOLD(a4)
+
+	clr.w	minY(a4)
+	clr.w	xadd(a4)
+	clr.w	modulo(a4)
+	move.w	#256*3*64+20,blitsize(a4)
+
+	lea	vbi_The_End(pc),a0
+	move.l	a0,$6c
+	lea	CopperList_The_End,a0
+	move.l  a0,cop1lch(a6)
+
+	move.w	#0,vposw(a6)
+
+;	move.l	#-207*80,End_Text_Ptr(a4)	; changed in v1.01
+	move.l	#-203*80,End_Text_Ptr(a4)	; (a bug fix)
+
+	clr.w	quitflag(a4)
+	clr.w	FadeValue(a4)			; added in v1.01
+
+	clr.w	timer(a4)
+
+	clr.w	Xangle(a4)
+	clr.w	Yangle(a4)
+	clr.w	Zangle(a4)
+
+	move.w	#%1000000000100000,intena(a6)
+
+	rts
 
 vbi_The_End:
 	movem.l d0-d7/a0-a6,-(sp)
@@ -5652,13 +5591,7 @@ DefineObject_The_End
 	move.w	#-900,Distance(a4)
 	rts
 
-
-
-
-
-***************************************************************************
-***	;; END OF ALL PARTS, SOME SMALL BUT IMPORTANT ROUTINES LEFT	***
-***************************************************************************
+;;; END OF ALL PARTS, SOME SMALL BUT IMPORTANT ROUTINES LEFT
 
 	NoisetrackerV2_0_V		; replay makrona
 
