@@ -60,16 +60,12 @@
 	include "cia.i"
 	include "MGmacros.i"
 
-
-***	Debug options
-
+;;; Debug options
 RASTERTIME	= 0		; show rastertime in every part
 DEBUG		= 0		; go to next part with left/right mouse button
 RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
 
-
-***	BSS Stack (tm) Variable Definitions
-
+;;; BSS Stack (tm) Variable Definitions
 	dl	oldcopper,oldvbi,oldint13
 	dw	olddma,oldintena
 	dw	oldcra,oldcrb
@@ -116,9 +112,7 @@ RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
 
 	dl	End_Text_Ptr
 
-
-***	Kaiken pahan alku ja juuri
-
+;;; Kaiken pahan alku ja juuri
 Main:	bra.s	.ver
 	dc.b	"$VER: Vertex 1.03 (29.07.1993) by Red Chrome",0,0
 .ver	movem.l	d0-a6,-(sp)
@@ -248,9 +242,7 @@ int13:	move.l	d0,-(sp)
 	move.l	(sp)+,d0
 	rte
 
-
-***    Kaikki vblank-keskeytykset ja rutiinit eri osioihin
-
+;;; Kaikki vblank-keskeytykset ja rutiinit eri osioihin
 
 ;;; BORDERED PLANEVECTOR 'OPEN YOUR EYES, NOW!'
 Part_OpenYourEyesNow:
