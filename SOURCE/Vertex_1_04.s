@@ -171,7 +171,8 @@ Main:	bra.s	.ver
 	move.w	Part(a4),d0	; part number
 	add.w	#1,Part(a4)
 	lsl.w	#2,d0
-	lea	SetList(pc,d0),a0
+	lea	SetList,a0
+	add.w	d0,a0
 	tst.l	(a0)
 	beq	.CleanUp
 	move.l	(a0),a0
