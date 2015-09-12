@@ -1,9 +1,15 @@
 AS=toolchain/vasm/vasmm68k_mot
 LD=toolchain/vlink/vlink
 FSUAE=fs-uae
+ASFLAGS=-IINCLUDE -IEXTERN -ISND -ldots -kick1hunks -Fhunk
+LDFLAGS=-bamigahunk
+OBJS=SOURCE/Vertex_1_04.o
 
-Vertex2015: SOURCE/Vertex_1_04.s Makefile
-	$(AS) -IINCLUDE -IEXTERN -ISND -ldots -kick1hunks -Fhunkexe -o $@ $<
+%.o: %.s
+	$(AS) $(ASFLAGS) -o $@ $^
+
+Vertex2015: $(OBJS)
+	$(LD) $(LDFLAGS) -o $@ $^
 
 run: Vertex2015
 	cp Vertex2015 run
