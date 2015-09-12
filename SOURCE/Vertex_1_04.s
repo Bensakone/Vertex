@@ -5594,8 +5594,6 @@ DefineObject_The_End
 
 ;;; END OF ALL PARTS, SOME SMALL BUT IMPORTANT ROUTINES LEFT
 
-	NoisetrackerV2_0_V		; replay makrona
-
 gfxname:	dc.b 'graphics.library',0,0
 
 ***************************************************************************
@@ -6878,7 +6876,7 @@ Colors_EndText:
 ***	;; INCBIN-CHIPPIDATA						***
 ***************************************************************************
 
-
+	public	mt_data
 mt_data:	incbin	"mod.RESOLUTION2"
 
 	ds.b	100	; älä poista tätä vaikka vaikuttaakin typerältä...!
@@ -6937,9 +6935,6 @@ ActiveOrder_MLV:	ds.l	5*4	; planea muutetaan ja neljää
 
 End_Text_Pic:	incbin	"VertexEndText22.raw"
 	; ei mahtunut chippiin
-
-
-	NoisetrackerV2_0_Variables	; musarutiinin muuttujat
 
 ***	Tätä colors pöytää editoidaan
 

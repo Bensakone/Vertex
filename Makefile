@@ -3,7 +3,7 @@ LD=toolchain/vlink/vlink
 FSUAE=fs-uae
 ASFLAGS=-IINCLUDE -IEXTERN -ISND -ldots -kick1hunks -Fhunk
 LDFLAGS=-bamigahunk
-OBJS=SOURCE/Vertex_1_04.o
+OBJS=SOURCE/Vertex_1_04.o SOURCE/nt_replay.o
 
 %.o: %.s
 	$(AS) $(ASFLAGS) -o $@ $^
