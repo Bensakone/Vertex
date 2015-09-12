@@ -239,6 +239,14 @@ SetList:
 	dc.l	Part_TheEnd
 	dc.l	0		; end
 
+;;; CIAB musansoittokeskeytys - tosin ei cia-playerillä...
+int13:	move.l	d0,-(sp)
+	bsr.w	mt_music
+	move.b	icr+ciab,d0
+	move.w	#$2000,intreq+custom
+	move.l	(sp)+,d0
+	rte
+
 ;;; BORDERED PLANEVECTOR 'OPEN YOUR EYES, NOW!'
 Part_OpenYourEyesNow:
 	lea	vbi_BPV(pc),a0
@@ -746,16 +754,6 @@ Part_TheEnd:
 	move.w	#%1000000000100000,intena(a6)
 
 	rts
-
-
-***	CIAB musansoittokeskeytys - tosin ei cia-playerillä...
-
-int13:	move.l	d0,-(sp)
-	bsr.w	mt_music
-	move.b	icr+ciab,d0
-	move.w	#$2000,intreq+custom
-	move.l	(sp)+,d0
-	rte
 
 
 ***	Kaikki vblank-keskeytykset ja rutiinit eri osioihin
