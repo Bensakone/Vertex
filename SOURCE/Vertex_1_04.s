@@ -153,10 +153,12 @@ Main:	bra.s	.ver
 	move.b	#%10000001,icr(a3)
 	move.b	#%10010101,cra(a3)
 
+	bsr.w	mt_init
+
 	lea	int13(pc),a0
 	move.l	a0,$78(a5)
 
-	bsr.w	mt_init
+	move.w	#%1110000000000000,intena(a6)
 
 ;;; Run all the parts.
 .parts:
@@ -197,6 +199,8 @@ Main:	bra.s	.ver
 
 ;;; CLEAN UP ALL THE MESS
 .CleanUp:
+	move.w	#$7fff,intena(a6)
+
 	bsr.w	mt_end
 
 	lea	custom,a6
@@ -282,7 +286,7 @@ Part_OpenYourEyesNow:
 	lea	plane2,a0
 	move.l	a0,Buffer(a4)
 
-	move.w	#%1110000000100000,intena(a6)
+	move.w	#%1000000000100000,intena(a6)
 
 	rts
 
