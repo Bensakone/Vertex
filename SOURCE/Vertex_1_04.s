@@ -66,6 +66,7 @@ DEBUG		= 0		; go to next part with left/right mouse button
 RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
 
 ;;; BSS Stack (tm) Variable Definitions
+	dl	VBR
 	dl	oldcopper,oldvbi,oldint13
 	dw	olddma,oldintena
 	dw	oldcra,oldcrb
@@ -118,6 +119,8 @@ Main:	bra.s	.ver
 .ver
 	lea	Bss_Stack,a4
 	move.l	4.w,a6
+	bsr	GetVBR
+	move.l	a5,VBR(a4)
 	lea	gfxname(pc),a1
 	moveq	#0,d0
 	jsr	-552(a6)	; _LVOOpenLibrary
@@ -158,7 +161,7 @@ Main:	bra.s	.ver
 ;;; Run all the parts.
 .parts:
 	;; The rules for each part subroutine:
-	;; - can trust a4=bss vars, a6=custom on entry
+	;; - can trust a4=bss vars, a5=vbr, a6=custom on entry
 	;; - does not have to restore the above
 	;; - must set everything up for themselves
 	;; - must set quitflag=-1 to move on
@@ -233,6 +236,23 @@ SetList:
 	dc.l	Part_Glenz
 	dc.l	Part_TheEnd
 	dc.l	0		; end
+
+;;; Get Vector Base Register
+	;; In:	a6=execbase
+	;; Out:	a5=vbr (0 for 68000)
+GetVBR:	sub.l	a5,a5
+	btst	#0,297(a6)
+	beq.s	.vanilla68k
+	lea.l	.supervisor_getvbr(pc),a5
+	jsr	-30(a6)
+.vanilla68k:
+	rts
+
+.supervisor_getvbr:
+	machine	mc68010
+	movec	vbr,a5
+	machine	mc68000
+	rte
 
 ;;; CIAB musansoittokeskeytys - tosin ei cia-playerillä...
 int13:	move.l	d0,-(sp)
