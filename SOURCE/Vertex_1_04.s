@@ -481,7 +481,7 @@ vbi_BPV:
 	move.w	#$005,c0+custom
 	ENDC
 .rmpause
-.end	move.w	#$60,intreq+custom
+.end	move.w	#$20,intreq+custom
 	movem.l (sp)+,d0-a6
 	rte
 
@@ -801,7 +801,7 @@ vbi_Line:
 
 .loppu
 
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l (sp)+,d0-a6
 	rte
 
@@ -924,7 +924,7 @@ vbi_Wille:
 .rmpause
 
 .loppu
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l (sp)+,d0-d7/a0-a6
 	rte
 
@@ -1728,7 +1728,7 @@ vbi_FunnyText:
 
 .rmpause
 .end
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l	(sp)+,d0-d7/a0-a6
 	rte
 
@@ -1962,7 +1962,7 @@ vbi_Vertex:
 	ENDC
 .rmpause
 
-	move.w	#$60,intreq+custom
+	move.w	#$20,intreq+custom
 	movem.l (sp)+,d0-a6
 	rte
 
@@ -2202,7 +2202,7 @@ vbi_Grid:
 	ENDC
 .rmpause
 
-	move.w	#$60,intreq+custom
+	move.w	#$20,intreq+custom
 	movem.l (sp)+,d0-a6
 	rte
 
@@ -2640,7 +2640,7 @@ vbi_Field:
 	ENDC
 .rmpause
 
-.loppu	move.w	#$60,intreq+custom
+.loppu	move.w	#$20,intreq+custom
 	movem.l (sp)+,d0-d7/a0-a6
 	rte
 
@@ -2952,7 +2952,7 @@ vbi_Plasma:
 	sub.w	#$100,wait_Plasma
 
 .rmpause
-.end	move.w	#$60,intreq(a6)
+.end	move.w	#$20,intreq(a6)
 	movem.l (sp)+,d0-a6
 	rte
 
@@ -3208,7 +3208,7 @@ vbi_FillIcos:
 	ENDC
 .rmpause
 
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l (sp)+,d0-d7/a0-a6
 	rte
 
@@ -3640,7 +3640,7 @@ vbi_Writer:
 	ENDC
 .rmpause
 
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l	(sp)+,d0-d7/a0-a6
 	rte
 
@@ -4078,7 +4078,7 @@ vbi_Slime:
 	ENDC
 .rmpause
 
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l (sp)+,d0-d7/a0-a6
 	rte
 
@@ -4391,7 +4391,7 @@ vbi_Dick:
 	ENDC
 .rmpause
 
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l	(sp)+,d0-d7/a0-a6
 	rte
 
@@ -4724,7 +4724,7 @@ vbi_Glenz:
 					; logout-aika.
 .rmpause
 
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l (sp)+,d0-d7/a0-a6
 	rte
 
@@ -5312,7 +5312,7 @@ vbi_The_End:
 .no_mgj_fade_more
 .final_end
 .rmpause
-	move.w	#$60,intreq(a6)
+	move.w	#$20,intreq(a6)
 	movem.l (sp)+,d0-d7/a0-a6
 	rte
 
