@@ -58,6 +58,7 @@
 
 	include "custom.i"
 	include "cia.i"
+	include "libs.i"
 	include "MGmacros.i"
 
 ;;; Debug options
@@ -118,17 +119,17 @@ Main:	bra.s	.ver
 	dc.b	"$VER: Vertex 1.03 (29.07.1993) by Red Chrome",0,0
 .ver
 	lea	Bss_Stack,a4
-	move.l	4.w,a6
+	move.l	ExecBase,a6
 	bsr	GetVBR
 	move.l	a5,VBR(a4)
 	lea	gfxname(pc),a1
 	moveq	#0,d0
-	jsr	-552(a6)	; _LVOOpenLibrary
+	jsr	Exec_OpenLibrary(a6)
 	tst.l	d0
 	beq.s	.no_gfx_lib_but_so_what
 	move.l 	d0,a1
 	move.l 	38(a1),oldcopper(a4)
-	jsr	-414(a6)	; _LVOCloseLibrary
+	jsr	Exec_CloseLibrary(a6)
 
 .no_gfx_lib_but_so_what
 	lea	custom,a6
@@ -248,7 +249,7 @@ GetVBR:	sub.l	a5,a5
 	btst	#0,297(a6)
 	beq.s	.vanilla68k
 	lea.l	.supervisor_getvbr(pc),a5
-	jsr	-30(a6)
+	jsr	Exec_Supervisor(a6)
 .vanilla68k:
 	rts
 
