@@ -139,8 +139,8 @@ Main:	bra.s	.ver
 	move.b	cra(a3),oldcra(a4)
 	move.b	crb(a3),oldcrb(a4)
 
-	move.l	$6c,oldvbi(a4)
-	move.l	$78,oldint13(a4)
+	move.l	$6c(a5),oldvbi(a4)
+	move.l	$78(a5),oldint13(a4)
 
 	move.w	#%0000000000101111,dmacon(a6)
 	move.w	#%1000010111010000,dmacon(a6)
@@ -154,7 +154,7 @@ Main:	bra.s	.ver
 	move.b	#%10010101,cra(a3)
 
 	lea	int13(pc),a0
-	move.l	a0,$78
+	move.l	a0,$78(a5)
 
 	bsr.w	mt_init
 
@@ -201,8 +201,8 @@ Main:	bra.s	.ver
 
 	lea	custom,a6
 	move.l	oldcopper(a4),cop1lch(a6)
-	move.l	oldvbi(a4),$6c
-	move.l	oldint13(a4),$78
+	move.l	oldvbi(a4),$6c(a5)
+	move.l	oldint13(a4),$78(a5)
 
 	lea	ciab,a3
 	move.b	#$9f,icr(a3)
@@ -267,7 +267,7 @@ int13:	move.l	d0,-(sp)
 ;;; BORDERED PLANEVECTOR 'OPEN YOUR EYES, NOW!'
 Part_OpenYourEyesNow:
 	lea	vbi_BPV(pc),a0
-	move.l	a0,$6c
+	move.l	a0,$6c(a5)
 
 	lea	CopperList_BPV,a0
 	move.l  a0,cop1lch(a6)
@@ -632,7 +632,8 @@ Part_IcosahedralLineVector:
 	bsr.w	SetPlanes
 
 	lea	vbi_Line(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_Line,a0
 	move.l  a0,cop1lch(a6)
 	clr.w	quitflag(a4)
@@ -698,7 +699,8 @@ vbi_Line:
 	move.w	#6,ColNum(a4)
 
 	lea	vbi_Wille(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_Wille,a0
 	move.l  a0,cop1lch(a6)
 
@@ -1648,7 +1650,7 @@ Part_LoveKnowItAndFear:
 
 	clr.w	quitflag(a4)
 	lea	vbi_FunnyText(pc),a0
-	move.l	a0,$6c
+	move.l	a0,$6c(a5)
 	lea	CopperList_FunnyText,a0
 	move.l  a0,cop1lch(a6)
 
@@ -1813,7 +1815,8 @@ Part_VertexMultiplane:
 
 	clr.w	framepointer(a4)
 	lea	vbi_Vertex(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_Vertex,a0
 	move.l  a0,cop1lch(a6)
 
@@ -2131,7 +2134,8 @@ Part_VectorGridMunuainen:
 	bsr	ClearScreen
 
 	lea	vbi_Grid(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_Grid,a0
 	move.l  a0,cop1lch(a6)
 	clr.w	timer(a4)
@@ -2581,7 +2585,8 @@ Part_FieldOfDots:
 	clr.w	FadeValue(a4)
 
 	lea	vbi_Field(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_Field,a0
 	move.l  a0,cop1lch(a6)
 	clr.w	quitflag(a4)
@@ -2912,7 +2917,7 @@ Part_FakePlasma:
 	move.w	#%0000000000100000,intena(a6)
 
 	lea	vbi_Plasma(pc),a0
-	move.l	a0,$6c
+	move.l	a0,$6c(a5)
 	lea	CopperList_Plasma,a0
 	move.l  a0,cop1lch(a6)
 
@@ -3052,7 +3057,8 @@ Part_WillesBall:
 	move.l	a0,Buffer(a4)
 
 	lea	vbi_FillIcos(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_FillIcos,a0
 	move.l  a0,cop1lch(a6)
 	clr.w	quitflag(a4)
@@ -3597,7 +3603,8 @@ Part_MandelWriter:
 	bsr	ClearScreen
 
 	lea	vbi_Writer(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 
 	lea	CopperList_Mandel,a0
 	move.l  a0,cop1lch(a6)
@@ -3980,7 +3987,8 @@ Part_SlimeVector:
 
 
 	lea	vbi_Slime(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_Slime,a0
 	move.l  a0,cop1lch(a6)
 
@@ -4339,7 +4347,7 @@ Part_DickPic:
 	move.w	#130,FadeValue(a4)
 
 	lea	vbi_Dick(pc),a0
-	move.l	a0,$6c
+	move.l	a0,$6c(a5)
 	lea	CopperList_Dick,a0
 	move.l  a0,cop1lch(a6)
 
@@ -4609,7 +4617,8 @@ Part_Glenz:
 	clr.w	FadeValue(a4)
 
 	lea	vbi_Glenz(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_Glenz,a0
 	move.l  a0,cop1lch(a6)
 	clr.w	quitflag(a4)
@@ -5071,7 +5080,8 @@ Part_TheEnd:
 	move.w	#256*3*64+20,blitsize(a4)
 
 	lea	vbi_The_End(pc),a0
-	move.l	a0,$6c
+	move.l	VBR(a4),a5
+	move.l	a0,$6c(a5)
 	lea	CopperList_The_End,a0
 	move.l  a0,cop1lch(a6)
 
