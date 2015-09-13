@@ -16,7 +16,7 @@ run: Vertex2015
 	$(FSUAE) fs-uae.config
 
 clean:
-	rm -f Vertex2015 run/Vertex2015
+	rm -f Vertex2015 run/Vertex2015 $(OBJS)
 
 toolchain:
 	make -C $@
