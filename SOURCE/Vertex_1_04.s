@@ -115,7 +115,7 @@ RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
 ;;; Kaiken pahan alku ja juuri
 Main:	bra.s	.ver
 	dc.b	"$VER: Vertex 1.03 (29.07.1993) by Red Chrome",0,0
-.ver	movem.l	d0-a6,-(sp)
+.ver
 	lea	Bss_Stack,a4
 	move.l	4.w,a6
 	lea	gfxname(pc),a1
@@ -170,9 +170,10 @@ Main:	bra.s	.ver
 	tst.l	(a0)
 	beq	.CleanUp
 	move.l	(a0),a0
+
+	movem.l	d0-a6,-(sp)
 	jsr	(a0)
-	lea	Bss_Stack,a4	; parts may mess these up
-	lea	custom,a6
+	movem.l	(sp)+,d0-a6
 
 .MainLoop
 	;; FIXME: this loop is quite silly
@@ -213,7 +214,6 @@ Main:	bra.s	.ver
 	or.w	#$C000,d0
 	move.w	d0,intena(a6)
 
-	movem.l	(sp)+,d0-a6
 	moveq	#0,d0
 	rts				;-)  And it all ended up so happily...
 
