@@ -132,9 +132,9 @@ Main:	bra.s	.ver
 	move.w	dmaconr(a6),olddma(a4)
 	move.w	intenar(a6),oldintena(a4)
 
-	lea	ciab,a5
-	move.b	cra(a5),oldcra(a4)
-	move.b	crb(a5),oldcrb(a4)
+	lea	ciab,a3
+	move.b	cra(a3),oldcra(a4)
+	move.b	crb(a3),oldcrb(a4)
 
 	move.l	$6c,oldvbi(a4)
 	move.l	$78,oldint13(a4)
@@ -144,11 +144,11 @@ Main:	bra.s	.ver
 
 	move.w	#%0011111111111111,intena(a6)
 
-	move.b	#$37,tahi(a5)
-	move.b	#$6a,talo(a5)
-	move.b	#%00011111,icr(a5)
-	move.b	#%10000001,icr(a5)
-	move.b	#%10010101,cra(a5)
+	move.b	#$37,tahi(a3)
+	move.b	#$6a,talo(a3)
+	move.b	#%00011111,icr(a3)
+	move.b	#%10000001,icr(a3)
+	move.b	#%10010101,cra(a3)
 
 	lea	int13(pc),a0
 	move.l	a0,$78
@@ -201,10 +201,10 @@ Main:	bra.s	.ver
 	move.l	oldvbi(a4),$6c
 	move.l	oldint13(a4),$78
 
-	lea	ciab,a5
-	move.b	#$9f,icr(a5)
-	move.b	oldcra(a4),cra(a5)
-	move.b	oldcrb(a4),crb(a5)
+	lea	ciab,a3
+	move.b	#$9f,icr(a3)
+	move.b	oldcra(a4),cra(a3)
+	move.b	oldcrb(a4),crb(a3)
 
 	move.w	olddma(a4),d0
 	or.w	#$8000,d0
