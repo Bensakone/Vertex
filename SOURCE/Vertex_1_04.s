@@ -177,6 +177,8 @@ Main:	bra.s	.ver
 	beq	.CleanUp
 	move.l	(a0),a0
 
+	clr.w	quitflag(a4)
+
 	movem.l	d0-a6,-(sp)
 	jsr	(a0)
 	movem.l	(sp)+,d0-a6
@@ -642,7 +644,6 @@ Part_IcosahedralLineVector:
 	move.l	a0,Exec_intvector_vbi(a5)
 	lea	CopperList_Line,a0
 	move.l  a0,cop1lch(a6)
-	clr.w	quitflag(a4)
 
 	lea	text(pc),a0
 	move.l	a0,scrollpointer(a4)
@@ -1654,7 +1655,6 @@ DrawLine:
 Part_LoveKnowItAndFear:
 	move.w	#%0000000000100000,intena(a6)
 
-	clr.w	quitflag(a4)
 	lea	vbi_FunnyText(pc),a0
 	move.l	a0,Exec_intvector_vbi(a5)
 	lea	CopperList_FunnyText,a0
@@ -1810,8 +1810,6 @@ Part_VertexMultiplane:
 	clr.w	Xangle(a4)
 	clr.w	Yangle(a4)
 	clr.w	Zangle(a4)
-
-	clr.w	quitflag(a4)
 
 	bsr	DefineObject_Vertex
 
@@ -2127,7 +2125,6 @@ DefineObject_Vertex:
 Part_VectorGridMunuainen:
 	move.w	#%0000000000100000,intena(a6)
 
-	clr.w	quitflag(a4)
 	move.w	#0,FadeValue(a4)
 
 	bsr	SetOrders_MLV
@@ -2595,7 +2592,6 @@ Part_FieldOfDots:
 	move.l	a0,Exec_intvector_vbi(a5)
 	lea	CopperList_Field,a0
 	move.l  a0,cop1lch(a6)
-	clr.w	quitflag(a4)
 
 	move.w	#%1000000000100000,intena(a6)
 
@@ -2927,7 +2923,6 @@ Part_FakePlasma:
 	lea	CopperList_Plasma,a0
 	move.l  a0,cop1lch(a6)
 
-	clr.w	quitflag(a4)
 	clr.w	timer(a4)
 
 	lea	plasma,a0
@@ -3067,7 +3062,6 @@ Part_WillesBall:
 	move.l	a0,Exec_intvector_vbi(a5)
 	lea	CopperList_FillIcos,a0
 	move.l  a0,cop1lch(a6)
-	clr.w	quitflag(a4)
 	clr.w	Zangle(a4)
 	clr.w	Yangle(a4)
 	clr.w	Xangle(a4)
@@ -3598,8 +3592,6 @@ Part_MandelWriter:
 
 	move.w	#10,PrintSpeed(a4)
 
-	clr.w	quitflag(a4)
-
 	lea	plane1,a0
 	move.l	a0,Active(a4)
 
@@ -3998,7 +3990,6 @@ Part_SlimeVector:
 	lea	CopperList_Slime,a0
 	move.l  a0,cop1lch(a6)
 
-	clr.w	quitflag(a4)
 	clr.w	timer(a4)
 
 	move.w	#%1000000000100000,intena(a6)
@@ -4358,7 +4349,6 @@ Part_DickPic:
 	move.l  a0,cop1lch(a6)
 
 	clr.w	timer(a4)
-	clr.w	quitflag(a4)
 
 	move.w	#%1000000000100000,intena(a6)
 
@@ -4627,7 +4617,6 @@ Part_Glenz:
 	move.l	a0,Exec_intvector_vbi(a5)
 	lea	CopperList_Glenz,a0
 	move.l  a0,cop1lch(a6)
-	clr.w	quitflag(a4)
 	clr.w	timer(a4)
 
 	move.w	#%1000000000100000,intena(a6)
@@ -5096,7 +5085,6 @@ Part_TheEnd:
 ;	move.l	#-207*80,End_Text_Ptr(a4)	; changed in v1.01
 	move.l	#-203*80,End_Text_Ptr(a4)	; (a bug fix)
 
-	clr.w	quitflag(a4)
 	clr.w	FadeValue(a4)			; added in v1.01
 
 	clr.w	timer(a4)
