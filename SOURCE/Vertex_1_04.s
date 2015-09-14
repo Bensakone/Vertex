@@ -615,6 +615,11 @@ drawline_f_BPV:
 Part_IcosahedralLineVector:
 	move.w	#%0000000000100000,intena(a6)
 
+	lea	plane1,a0
+	move.l	a0,Active(a4)
+	lea	plane2,a0
+	move.l	a0,Buffer(a4)
+
 	bsr	DefineObject_Line
 
 	clr.w	minYOLD(a4)
