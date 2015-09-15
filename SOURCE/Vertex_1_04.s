@@ -87,7 +87,7 @@ RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
 	dw	Xcos,Xsin,Ycos,Ysin,Zcos,Zsin
 	dw	Distance
 
-	dw	FadeValue,FlashValue
+	dw	FadeValue
 	dw	minY,maxY,minX,maxX
 	dl	xadd,xaddOLD
 	dw	modulo,blitsize,moduloOLD,blitsizeOLD
@@ -283,7 +283,7 @@ Part_OpenYourEyesNow:
 	bsr	DefineObject_Open
 
 	move.w	#1,obenumber(a4)
-	move.w	#128,FlashValue(a4)
+	move.w	#0,FadeValue(a4)
 
 	lea	plane1,a0
 	move.l	a0,Active(a4)
@@ -317,7 +317,7 @@ vbi_BPV:
 	move.w	#64*150*2+20,d2
 	bsr	ClearScreen
 
-	tst.w	FlashValue(a4)
+	cmp.w	#-1,obenumber(a4)
 	beq.w	.final_fade
 
 	cmp.w	#4,obenumber(a4)
@@ -333,7 +333,7 @@ vbi_BPV:
 	lea	CopColors_BPV,a0
 	lea	Colors_BPV(pc),a1
 	moveq	#4,d0
-	moveq	#4-1,d7
+	moveq	#4,d7
 	bsr	FadeIn
 
 	cmp.w	#-1,rotation(a4)	; obj close => no more rotation
@@ -460,14 +460,20 @@ vbi_BPV:
 	lea	CopColors_BPV,a0
 	lea	Colors_BPV(pc),a1
 	moveq	#17,d0
-	moveq	#4-1,d7
+	moveq	#4,d7
 	bsr	FlashOut
+
+	tst.w	FadeValue(a4)
+	bne.w	.ylistys
+	move.w	#-1,obenumber(a4)
+	move.w	#$7f,FadeValue(a4)
+
 	bra.s	.ylistys
 
 .jaha	lea	CopColors_BPV,a0
 	lea	Colors_BPV(pc),a1
 	moveq	#10,d0
-	moveq	#4-1,d7
+	moveq	#4,d7
 	bsr	FadeOut
 
 .ylistys
@@ -497,7 +503,7 @@ vbi_BPV:
 	lea	CopColors_BPV,a0
 	lea	Colors_BPV2(pc),a1
 	moveq	#2,d0
-	moveq	#4-1,d7
+	moveq	#4,d7
 	bsr	FadeOut
 
 	tst.w	FadeValue(a4)
@@ -707,7 +713,7 @@ vbi_Line:
 	ble.w	.jump4
 
 	bsr	DefineObject_Wille
-	move.w	#128,FadeValue(a4)
+	move.w	#127,FadeValue(a4)
 	move.w	#6,ColNum(a4)
 
 	lea	vbi_Wille(pc),a0
@@ -758,7 +764,7 @@ vbi_Line:
 	lea	CopColor_LineC2,a0
 	lea	Color_Line(pc),a1
 	moveq	#1,d0
-	moveq	#1-1,d7
+	moveq	#1,d7
 	bsr	FadeOut
 
 	bra	.jump
@@ -771,14 +777,14 @@ vbi_Line:
 	lea	CopColor_LineC2,a0
 	lea	Color_Line(pc),a1
 	moveq	#1,d0
-	moveq	#1-1,d7
+	moveq	#1,d7
 	bsr	FadeOut
 	bra.w	.jump
 
 .jump1	lea	CopColor_LineC1,a0
 	lea	Color_Line(pc),a1
 	moveq	#1,d0
-	moveq	#3-1,d7
+	moveq	#3,d7
 	bsr	FadeIn
 
 .jump
@@ -899,7 +905,7 @@ vbi_Wille:
 	lea	CopColor_Wille,a0
 	lea	Color_Wille(pc),a1
 	moveq	#1,d0
-	moveq	#7-1,d7
+	moveq	#7,d7
 	bsr	FadeOut
 
 	bra.s	.joop
@@ -1666,7 +1672,7 @@ Part_LoveKnowItAndFear:
 	move.l  a0,cop1lch(a6)
 
 	move.w	#9,Joka(a4)
-	move.w	#136,FadeValue(a4)
+	move.w	#127,FadeValue(a4)
 	move.l	#-44*28,FunnyPointer(a4)
 
 	move.l	#plane1,d0
@@ -1716,7 +1722,7 @@ vbi_FunnyText:
 	lea	CopColors_FunnyText,a0
 	lea	Colors_FunnyText(pc),a1
 	moveq	#5,d0
-	moveq	#1-1,d7
+	moveq	#1,d7
 	bsr	FadeOut
 
 	tst.w	FadeValue(a4)
@@ -1860,7 +1866,7 @@ vbi_Vertex:
 	lea	CopColors_Vertex,a0
 	lea	Colors_Vertex(pc),a1
 	moveq	#3,d0
-	moveq	#16-1,d7
+	moveq	#16,d7
 	bsr	FadeIn
 
 	bra.w	.no_anus
@@ -1955,7 +1961,7 @@ vbi_Vertex:
 .phase3	lea	CopColors_Vertex,a0
 	lea	Colors_Vertex(pc),a1
 	moveq	#1,d0
-	moveq	#16-1,d7
+	moveq	#16,d7
 	bsr	FadeOut
 
 	sub.w	#50,Distance(a4)
@@ -2187,7 +2193,7 @@ vbi_Grid:
 	lea	CopColors_Grid,a0
 	lea	Colors_Grid(pc),a1
 	moveq	#15,d0
-	moveq	#16-1,d7
+	moveq	#16,d7
 	bsr	FadeIn
 
 	cmp.w	#50*2,timer(a4)
@@ -2219,7 +2225,7 @@ vbi_Grid:
 	lea	CopColors_Grid,a0
 	lea	Colors_Grid(pc),a1
 	moveq	#1,d0
-	moveq	#16-1,d7
+	moveq	#16,d7
 	bsr	FadeOut
 	sub.w	#40,Distance(a4)
 	cmp.w	#-7000,Distance(a4)
@@ -2642,7 +2648,7 @@ vbi_Field:
 	lea	CopColors_Field,a0
 	lea	Colors_Field(pc),a1
 	moveq	#1,d0
-	moveq	#3-1,d7
+	moveq	#3,d7
 	bsr	FadeIn
 
 	sub.w	#10,Distance(a4)
@@ -2657,7 +2663,7 @@ vbi_Field:
 	lea	CopColors_Field,a0
 	lea	Colors_Field(pc),a1
 	moveq	#2,d0
-	moveq	#3-1,d7
+	moveq	#3,d7
 	bsr	FadeOut
 
 	add.w	#10,Distance(a4)
@@ -2929,6 +2935,7 @@ Part_FakePlasma:
 	move.l  a0,cop1lch(a6)
 
 	clr.w	timer(a4)
+	move.w	#$7f,FadeValue(a4)
 
 	lea	plasma,a0
 	lea	Planes_Plasma,a1
@@ -2956,12 +2963,12 @@ vbi_Plasma:
 	lea	CopColors_Plasma,a0
 	lea	Colors_Plasma,a1
 	moveq	#4,d0
-	moveq	#31-1,d7
+	moveq	#31,d7
 
 	cmp.w	#14*50,timer(a4)
 	bhi.s	.fade_away
 
-	bsr	FadeIn
+	bsr	FadeSet
 	bra.w	.over
 
 .fade_away
@@ -3134,7 +3141,7 @@ vbi_FillIcos:
 	lea	CopColors_FillIcos,a0
 	lea	Colors_FillIcos(pc),a1
 	moveq	#7,d0
-	moveq	#7-1,d7
+	moveq	#7,d7
 	bsr	FlashOut
 	
 	bra.w	.cont
@@ -3143,7 +3150,7 @@ vbi_FillIcos:
 	lea	CopColors_FillIcos,a0
 	lea	Colors_FillIcos(pc),a1
 	moveq	#7,d0
-	moveq	#7-1,d7
+	moveq	#7,d7
 	bsr	FlashIn
 	bra	.cont
 
@@ -3151,7 +3158,7 @@ vbi_FillIcos:
 	lea	CopColors_FillIcos,a0
 	lea	Colors_FillIcos(pc),a1
 	moveq	#3,d0
-	moveq	#7-1,d7
+	moveq	#7,d7
 	bsr	FadeIn
 
 .cont
@@ -3214,7 +3221,7 @@ vbi_FillIcos:
 	lea	CopColors_FillIcos,a0
 	lea	Colors_FillIcos(pc),a1
 	moveq	#3,d0
-	moveq	#7-1,d7
+	moveq	#7,d7
 	bsr	FadeOut
 
 	cmp.w	#0,FadeValue(a4)
@@ -3575,7 +3582,7 @@ Part_MandelWriter:
 	move.b	#$2d,mandelwait2(a4)
 	move.l	#80,BitPlaneAdd(a4)
 
-	move.w	#130,FadeValue(a4)
+	move.w	#127,FadeValue(a4)
 
 	lea	plane2,a0
 	move.l	a0,d0
@@ -3640,7 +3647,7 @@ vbi_Writer:
 	lea	CopColors_Mandel,a0
 	lea	Colors_Mandel(pc),a1
 	moveq	#2,d0
-	moveq	#32-1,d7
+	moveq	#32,d7
 	bsr	FadeOut
 
 	tst.w	FadeValue(a4)
@@ -4049,7 +4056,7 @@ vbi_Slime:
 	lea	CopColors_Slime,a0
 	lea	Colors_Slime(pc),a1
 	moveq	#3,d0
-	moveq	#8-1,d7
+	moveq	#8,d7
 	bsr	FadeIn
 
 .ok2
@@ -4099,7 +4106,7 @@ vbi_Slime:
 	lea	CopColors_Slime,a0
 	lea	Colors_Slime(pc),a1
 	moveq	#2,d0
-	moveq	#8-1,d7
+	moveq	#8,d7
 	bsr	FadeOut
 
 .loppu
@@ -4346,7 +4353,7 @@ FillScreen_Slime:
 Part_DickPic:
 	move.w	#%0000000000100000,intena(a6)
 
-	move.w	#130,FadeValue(a4)
+	move.w	#127,FadeValue(a4)
 
 	lea	vbi_Dick(pc),a0
 	move.l	a0,Exec_intvector_vbi(a5)
@@ -4407,7 +4414,7 @@ vbi_Dick:
 	lea	CopColors_Dick,a0
 	lea	Colors_Dick(pc),a1
 	moveq	#4,d0
-	moveq	#16-1,d7
+	moveq	#16,d7
 	bsr	FadeOut
 
 	cmp.w	#0,FadeValue(a4)
@@ -4710,7 +4717,7 @@ vbi_Glenz:
 	lea	CopColors_Glenz,a0
 	lea	Colors_Glenz(pc),a1	; PC-relative code
 	moveq	#4,d0
-	moveq	#9-1,d7
+	moveq	#9,d7
 	bsr	FadeIn
 
 	addq.w	#2,x_sin_pointer(a4)
@@ -4736,7 +4743,7 @@ vbi_Glenz:
 	lea	CopColors_Glenz,a0
 	lea	Colors_Glenz(pc),a1
 	moveq	#1,d0
-	moveq	#9-1,d7
+	moveq	#9,d7
 	bsr	FadeOut
 
 	
@@ -5186,7 +5193,7 @@ vbi_The_End:
 	lea	CopColors_EndText,a0
 	lea	Colors_EndText,a1
 	moveq	#3,d0
-	moveq	#1-1,d7
+	moveq	#1,d7
 	bsr	FadeIn
 .no_fade
 .not_yet_up
@@ -5286,7 +5293,7 @@ vbi_The_End:
 	lea	CopColors_Plates,a0
 	lea	Colors_Plates(pc),a1
 	moveq	#1,d0
-	moveq	#8-1,d7
+	moveq	#8,d7
 	bsr	FadeOut
 
 .not_yet2
@@ -5317,7 +5324,7 @@ vbi_The_End:
 	lea	CopColors_EndText,a0
 	lea	Colors_EndText,a1
 	moveq	#2,d0
-	moveq	#1-1,d7
+	moveq	#1,d7
 	bsr	FadeOut
 
 	tst.w	FadeValue(a4)
@@ -5331,7 +5338,7 @@ vbi_The_End:
 	bra.s	.no_mgj_fade_yet
 
 .set_fadeval
-	move.w	#130,FadeValue(a4)
+	move.w	#127,FadeValue(a4)
 
 	lea	LoResOn1,a0
 	subq.b	#2,(a0)
@@ -5618,147 +5625,164 @@ DefineObject_The_End
 gfxname:	dc.b 'graphics.library',0,0
 
 ***************************************************************************
-***	FadeIn / FadeOut / FlashIn / FlashOut v1.02			***
-***	Copyright (C) 1992-1993 by Great J of Red Chrome		***
+***	FadeSet/FadeIn/FadeOut/FlashSet/FlashIn/FlashOut v1.03		***
+***	Copyright (C) 1992-1993,2015 by Great J of Red Chrome		***
 ***									***
 ***	Inputs:	a0 = pointer to colors in coplist (CopColors_<name>)	***
 ***		a1 = pointer to a list of colors (Colors_<name>)	***
-***		d0 = speed (usually 1...20)				***
-***		d7 = number of colors minus one				***
+***		d0 = speed (units of 1/127, usually 1..20)		***
+***		d7 = number of colors					***
 ***									***
 ***	Also two BSS Stack (TM) variables needed:			***
-***	dw	FadeValue,FlashValue					***
+***	dw	FadeValue (in range 0..127)				***
 ***									***
 ***	Example:							***
 ***	lea	CopColors_<name>,a0
 ***	lea	Colors_<name>,a1
 ***	moveq	#5,d0
-***	moveq	#16-1,d7
+***	moveq	#16,d7
 ***	bsr	FadeIn
 ***									***
 ***************************************************************************
 
-FadeIn:
-	move.w	FadeValue(a4),d4
-	add.w	d0,d4
-	cmp.w	#136,d4
-	bls.s	.f_ok
-	move.w	#136,d4
-.f_ok
-	move.w	d4,FadeValue(a4)
-	bra.s	f_Fade
-
-FadeOut:
-	move.w	FadeValue(a4),d4
-	sub.w	d0,d4
-	bpl.s	.f_ok
-	clr.w	d4
-.f_ok
-	move.w	d4,FadeValue(a4)
-
-f_Fade:
-	move.w	(a1)+,d3		; get the original color values
-
-	move.w	d3,d0
-	and.w	#%000000001111,d0	; blue
-	mulu.w	d4,d0			; d4 contains percent value
-	lsr.w	#7,d0			; new blue value in d0
-
-	move.w	d3,d1
-	and.w	#%000011110000,d1	; green
-	lsr.w	#4,d1
-	mulu.w	d4,d1			; d4 contains percent value
-	lsr.w	#7,d1			; new green value in d1
-	lsl.w	#4,d1
-
-	move.w	d3,d2
-	and.w	#%111100000000,d2	; red
-	lsr.w	#8,d2
-	mulu.w	d4,d2			; d4 contains percent value
-	lsr.w	#7,d2			; new red value in d2
-	lsl.w	#8,d2
-
-	or.w	d0,d1			; join rgb-values to d2
-	or.w	d1,d2			;
-
-	move.w	d2,2(a0)		; save new rgb-values to copperlist
-
-	addq.l	#4,a0			; next copperlist position
-
-	dbf	d7,f_Fade
-
-	rts
-
+;;; FlashIn: white (FadeValue 0) -> actual colors (FadeValue 127)
 FlashIn:
-	move.w	FlashValue(a4),d4
-	add.w	d0,d4
-	cmp.w	#128,d4
-	bls.s	.f_ok
-	move.w	#128,d4
-.f_ok
-	move.w	d4,FlashValue(a4)
-	bra.s	f_Flash
+	lea	FlashCurve(pc),a2
+	bra.s	flash_fade_in
 
+;;; FadeIn: black (FadeValue 0) -> actual colors (FadeValue 127)
+FadeIn:
+	lea	FadeCurve(pc),a2
+
+flash_fade_in:
+	move.w	FadeValue(a4),d3
+	cmp.w	#$7f,d3		; stop if already at max
+	bne	.do
+	rts
+.do
+	add.w	d0,d3		; d0 determines fade/flash in speed
+	cmp.w	#$7f,d3		; keep in range
+	ble	.ok
+	move.w	#$7f,d3
+.ok	move.w	d3,FadeValue(a4)
+
+	lsr.w	#3,d3
+	bra.s	set_colors
+
+;;; FlashOut: actual colors (FadeValue 127) -> white (FadeValue 0)
 FlashOut:
-	move.w	FlashValue(a4),d4
-	sub.w	d0,d4
-	bpl.s	.f_ok
-	clr.w	d4
-.f_ok
-	move.w	d4,FlashValue(a4)
+	lea	FlashCurve(pc),a2
+	bra.s	flash_fade_out
 
-f_Flash:
+;;; FadeOut: actual colors (FadeValue 127) -> black (FadeValue = 0)
+FadeOut:
+	lea	FadeCurve(pc),a2
+
+flash_fade_out:
+	move.w	FadeValue(a4),d3
+	cmp.w	#0,d3		; stop if already at min
+	bne	.do
+	rts
+
+.do	sub.w	d0,d3		; d0 determines fade/flash out speed
+	bge	.ok
+	move.w	#0,d3
+.ok	move.w	d3,FadeValue(a4)
+
+	lsr.w	#3,d3		; to range [0..15]
+	bra.s	set_colors
+
+;;; FlashSet: initialize colors according to FadeValue in flash scale
+FlashSet:
+	lea	FlashCurve(pc),a2
+	bra.s	flash_fade_set
+
+;;; FlashSet: initialize colors according to FadeValue in fade scale
+FadeSet:
+	lea	FadeCurve(pc),a2
+
+flash_fade_set:
+	move.w	FadeValue(a4),d3
+	cmp.w	#$7f,d3		; enforce range
+	ble	.ok
+	move.w	#$7f,d3
+	move.w	d3,FadeValue(a4)
+
+.ok	lsr.w	#3,d3		; to range [0..15]
+
+	;; d3=fadevalue [0..15]
+	;; d7=number of colors
+	;; a0=colors in coplist
+	;; a1=original colors
+	;; a2=curve
+set_colors:
+	subq	#1,d7
+	and.l	#$f,d3
+	add.l	d3,a2			; column in the fade table!
+.colors
 	move.w	(a1)+,d3		; get the original color values
 
+	;; multiply each color component by 16 to index the fade table row
 	move.w	d3,d0
 	and.w	#%000000001111,d0	; blue
-	move.w	#15,d5
-	sub.w	d0,d5
-	move.w	#128,d6
-	sub.w	d4,d6
-	mulu.w	d5,d6			; d4 contains percent value
-	lsr.w	#7,d6			; new blue value in d0
-	add.w	d6,d0
+	lsl.w	#4,d0
+	move.b	(a2,d0.w),d0
 
 	move.w	d3,d1
 	and.w	#%000011110000,d1	; green
-	lsr.w	#4,d1
-
-	move.w	#15,d5
-	sub.w	d1,d5
-	move.w	#128,d6
-	sub.w	d4,d6
-	mulu.w	d5,d6			; d4 contains percent value
-	lsr.w	#7,d6			; new blue value in d0
-	add.w	d6,d1
-
+	move.b	(a2,d1.w),d1
 	lsl.w	#4,d1
+	or.w	d1,d0
 
-	move.w	d3,d2
-	and.w	#%111100000000,d2	; red
-	lsr.w	#8,d2
+	move.w	d3,d1
+	and.w	#%111100000000,d1	; red
+	lsr.w	#4,d1
+	move.b	(a2,d1.w),d1
+	lsl.w	#8,d1
+	or.w	d1,d0
 
-	move.w	#15,d5
-	sub.w	d2,d5
-	move.w	#128,d6
-	sub.w	d4,d6
-	mulu.w	d5,d6			; d4 contains percent value
-	lsr.w	#7,d6			; new blue value in d0
-	add.w	d6,d2
-
-	lsl.w	#8,d2
-
-	or.w	d0,d1			; join rgb-values to d2
-	or.w	d1,d2			;
-
-	move.w	d2,2(a0)		; save new rgb-values to copperlist
-
+	move.w	d0,2(a0)		; save new rgb-values to copperlist
 	addq.l	#4,a0			; next copperlist position
 
-	dbf	d7,f_Flash
+	dbf	d7,.colors
 
 	rts
 
+FadeCurve:
+	dc.b	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	dc.b	0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1
+	dc.b	0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2
+	dc.b	0,0,0,1,1,1,1,1,2,2,2,2,2,3,3,3
+	dc.b	0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4
+	dc.b	0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5
+	dc.b	0,0,1,1,2,2,2,3,3,4,4,4,5,5,6,6
+	dc.b	0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7
+	dc.b	0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8
+	dc.b	0,1,1,2,2,3,4,4,5,5,6,7,7,8,8,9
+	dc.b	0,1,1,2,3,3,4,5,5,6,7,7,8,9,9,10
+	dc.b	0,1,1,2,3,4,4,5,6,7,7,8,9,10,10,11
+	dc.b	0,1,2,2,3,4,5,6,6,7,8,9,10,10,11,12
+	dc.b	0,1,2,3,3,4,5,6,7,8,9,10,10,11,12,13
+	dc.b	0,1,2,3,4,5,6,7,7,8,9,10,11,12,13,14
+	dc.b	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+
+FlashCurve:
+	dc.b	15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0
+	dc.b	15,14,13,12,11,10,9,8,8,7,6,5,4,3,2,1
+	dc.b	15,14,13,12,12,11,10,9,8,7,6,5,5,4,3,2
+	dc.b	15,14,13,13,12,11,10,9,9,8,7,6,5,5,4,3
+	dc.b	15,14,14,13,12,11,11,10,9,8,8,7,6,5,5,4
+	dc.b	15,14,14,13,12,12,11,10,10,9,8,8,7,6,6,5
+	dc.b	15,14,14,13,13,12,11,11,10,10,9,8,8,7,7,6
+	dc.b	15,14,14,13,13,12,12,11,11,10,10,9,9,8,8,7
+	dc.b	15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8
+	dc.b	15,15,14,14,13,13,13,12,12,11,11,11,10,10,9,9
+	dc.b	15,15,14,14,14,13,13,13,12,12,12,11,11,11,10,10
+	dc.b	15,15,14,14,14,14,13,13,13,13,12,12,12,12,11,11
+	dc.b	15,15,15,14,14,14,14,14,13,13,13,13,13,12,12,12
+	dc.b	15,15,15,15,14,14,14,14,14,14,14,14,13,13,13,13
+	dc.b	15,15,15,15,15,15,15,15,14,14,14,14,14,14,14,14
+	dc.b	15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15
 
 CalcVecPoints:
 	lea	CosTable(pc),a0
