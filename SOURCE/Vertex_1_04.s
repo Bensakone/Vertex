@@ -1542,13 +1542,20 @@ DrawLine_Filled_Top2Bottom:
 	sub.w	d0,d2
 	bge.s	.x2gx1
 	neg.w	d2
-	addq.w	#2,d4
+	moveq	#2,d4
 .x2gx1
 	cmp.w	d5,d2
 	blo.s	.allok
 	subq.w	#1,d3
 .allok
 	sub.w	d1,d3
+
+	cmp.w	d2,d3
+	bge.s	.DeltaOk
+	exg	d2,d3
+	addq.w	#1,d4
+.DeltaOk
+	add.w	d2,d2
 
 	move.w	d1,d5		; 40*planes*d1
 	lsl.w	#3,d5
@@ -1561,35 +1568,36 @@ DrawLine_Filled_Top2Bottom:
 	add.w	d0,d1
 	add.l	a0,d1
 
-	move.w	d3,d0
-	cmp.w	d2,d0
-	bge.s	.dygdx
-	exg	d2,d3
-	addq.w	#1,d4
-.dygdx
 	move.b	.oktantit(pc,d4.w),d4
-	add.w	d2,d2
-	and.w	#$000f,d5
+	and.w	#$f,d5
 	ror.w	#4,d5
 	or.w	#%0000101101011010,d5
+	swap	d5
+	move.w	d4,d5
+
+	move.w	d2,d0		; 2DeltaP for BLTBMOD
+	swap	d0
+
+	sub.w	d3,d2		; 2DeltaP - DeltaS
+	bge.s	.SignBitOk
+	or.b	#$40,d5		; Set Sign Bit
+.SignBitOk
+
+	move.w	d2,d0
+	sub.w	d3,d0		; (2DeltaP - DeltaS) - DeltaS = 2(DeltaP-DeltaS)
+
+	lsl.w	#6,d3
+	addq.w	#2,d3
 
 	WaitB
 
-	move.w	d2,bltbmod(a6)
-	sub.w	d3,d2
-	bge.s	.signnl
-	or.b	#%01000000,d4
-.signnl
-	move.w	d2,bltaptl(a6)
-	sub.w	d3,d2
-	move.w	d2,bltamod(a6)
-	move.w	d5,bltcon0(a6)
-	move.w	d4,bltcon1(a6)
+	move.w	d2,bltaptl(a6)	; 2DeltaP - DeltaS
+	move.l	d0,bltbmod(a6)	; 2DeltaP | 2(DeltaP-DeltaS)
 	move.l	d1,bltcpth(a6)
 	move.l	d1,bltdpth(a6)
-	lsl.w	#6,d3
-	addq.w	#2,d3
+	move.l	d5,bltcon0(a6)
 	move.w	d3,bltsize(a6)
+
 	rts
 
 .oktantit:
