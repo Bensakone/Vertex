@@ -3955,48 +3955,46 @@ DrawSurfaces_Slime:
 	move.w	(a1)+,a5		; väri
 	cmp.w	#0,(a3)+		; piirretäänkö?
 	bge.w	.DoNotDraw		; eipä ole näkyvissä
-.loop2:	move.l	Buffer(a4),a0
-	move.w	a5,d0
-	btst	#0,d0
-	beq.s	.yli1
+.loop2:
+	move.w	#3,DrawLineNumPlanes(a4)
+
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
 	move.w	2(a2,d3.w),d1
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
-	move.w	#3,DrawLineNumPlanes(a4)
+
 	bsr	SetMinMax
-	bsr.w	DrawLine_Filled
-.yli1
-	move.w	a5,d0
-	btst	#1,d0
-	beq.s	.yli2
-	add.l	#40,a0
-	move.w	(a1),d3
-	move.w	(a2,d3.w),d0
-	move.w	2(a2,d3.w),d1
-	move.w	2(a1),d3
-	move.w	(a2,d3.w),d2
-	move.w	2(a2,d3.w),d3
-	move.w	#3,DrawLineNumPlanes(a4)
-	bsr	SetMinMax
-	bsr.w	DrawLine_Filled
-.yli2
-	move.w	a5,d0
-	btst	#2,d0
-	beq.s	.yli3
+
+	move.w	a5,d4
+
 	move.l	Buffer(a4),a0
-	add.l	#80,a0
-	move.w	(a1),d3
-	move.w	(a2,d3.w),d0
-	move.w	2(a2,d3.w),d1
-	move.w	2(a1),d3
-	move.w	(a2,d3.w),d2
-	move.w	2(a2,d3.w),d3
-	move.w	#3,DrawLineNumPlanes(a4)
-	bsr	SetMinMax
+	btst	#0,d4
+	beq.s	.yli1
+
+	movem.w	d0-d4,-(sp)
 	bsr.w	DrawLine_Filled
+	movem.w	(sp)+,d0-d4
+
+.yli1
+	add.l	#40,a0
+	btst	#1,d4
+	beq.s	.yli2
+
+	movem.w	d0-d4,-(sp)
+	bsr.w	DrawLine_Filled
+	movem.w	(sp)+,d0-d4
+
+.yli2
+	add.l	#40,a0
+	btst	#2,d4
+	beq.s	.yli3
+
+	movem.w	d0-d4,-(sp)
+	bsr.w	DrawLine_Filled
+	movem.w	(sp)+,d0-d4
+
 .yli3
 	addq.l	#4,a1
 	dbf	d6,.loop2
