@@ -4355,8 +4355,6 @@ vbi_Glenz:
 	beq.w	.rmpause
 	ENDC
 
-	NastyON
-
 	bsr.w	SwapBuffers
 
 	move.l	Active(a4),a0
@@ -4411,12 +4409,8 @@ vbi_Glenz:
 	bsr.w	CalcVecPoints
 	bsr.w	VisiblePlanes
 
-	NastyON
-
 	bsr	DrawSurfaces_Glenz
 	bsr.w	FillScreen_Glenz
-	WaitB
-
 
 	addq.w	#1,timer(a4)
 
