@@ -1492,16 +1492,21 @@ DrawLine_Left2Right:
 	lsl.w	#6,d4
 	add.w	#$42,d4
 
-	WaitB
+	move.w	d2,d0		; 2DeltaP for BLTBMOD
+	swap	d0
 
-	move.w	d2,bltbmod(a6)
 	sub.w	d3,d2		; 2DeltaP - DeltaS
 	bge.s	.SignBitOk
 	or.w	#$40,d5		; Set Sign Bit
 .SignBitOk
-	move.w	d2,bltaptl(a6)
-	sub.w	d3,d2		; (2DeltaP - DeltaS) - DeltaS =2(DeltaP-DeltaS)
-	move.w	d2,bltamod(a6)
+
+	move.w	d2,d0
+	sub.w	d3,d0		; (2DeltaP - DeltaS) - DeltaS = 2(DeltaP-DeltaS)
+
+	WaitB
+
+	move.w	d2,bltaptl(a6)	; 2DeltaP - DeltaS
+	move.l	d0,bltbmod(a6)	; 2DeltaP | 2(DeltaP-DeltaS)
 	move.l	d1,bltcpth(a6)
 	move.l	d1,bltdpth(a6)
 	move.l	d5,bltcon0(a6)
