@@ -1536,56 +1536,56 @@ DrawLine_Filled:
 	rts
 
 DrawLine_Filled_Top2Bottom:
-	moveq	#0,d5
-	move.w	d3,d4
-	sub.w	d1,d4
-	add.w	d4,d4
+	moveq	#0,d4
+	move.w	d3,d5
+	sub.w	d1,d5
+	add.w	d5,d5
 	sub.w	d0,d2
 	bge.s	.x2gx1
 	neg.w	d2
-	addq.w	#2,d5
+	addq.w	#2,d4
 .x2gx1
-	cmp.w	d4,d2
+	cmp.w	d5,d2
 	blo.s	.allok
 	subq.w	#1,d3
 .allok
 	sub.w	d1,d3
 
-	move.w	d1,d4		; 40*planes*d1
-	lsl.w	#3,d4
+	move.w	d1,d5		; 40*planes*d1
+	lsl.w	#3,d5
 	lsl.w	#5,d1
-	add.w	d4,d1
+	add.w	d5,d1
 	mulu	DrawLineNumPlanes(a4),d1
 
-	move.w	d0,d4
-	asr.w	#3,d4
-	add.w	d4,d1
+	move.w	d0,d5
+	asr.w	#3,d0
+	add.w	d0,d1
 	add.l	a0,d1
 
-	move.w	d3,d4
-	sub.w	d2,d4
+	move.w	d3,d0
+	cmp.w	d2,d0
 	bge.s	.dygdx
 	exg	d2,d3
-	addq.w	#1,d5
+	addq.w	#1,d4
 .dygdx
-	move.b	.oktantit(pc,d5),d5
+	move.b	.oktantit(pc,d4.w),d4
 	add.w	d2,d2
-	and.w	#$000f,d0
-	ror.w	#4,d0
-	or.w	#%0000101101011010,d0
+	and.w	#$000f,d5
+	ror.w	#4,d5
+	or.w	#%0000101101011010,d5
 
 	WaitB
 
 	move.w	d2,bltbmod(a6)
 	sub.w	d3,d2
 	bge.s	.signnl
-	or.b	#%01000000,d5
+	or.b	#%01000000,d4
 .signnl
 	move.w	d2,bltaptl(a6)
 	sub.w	d3,d2
 	move.w	d2,bltamod(a6)
-	move.w	d0,bltcon0(a6)
-	move.w	d5,bltcon1(a6)
+	move.w	d5,bltcon0(a6)
+	move.w	d4,bltcon1(a6)
 	move.l	d1,bltcpth(a6)
 	move.l	d1,bltdpth(a6)
 	lsl.w	#6,d3
