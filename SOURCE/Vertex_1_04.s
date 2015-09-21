@@ -80,6 +80,7 @@ RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
 
 	dl	ObjCoords,ObjConnect,ObjFace
 	dw	ObjPointNo,ObjLineNo,ObjFaceNo
+	dw	DrawLineNumPlanes
 
 	dw	timer,rotation,obenumber,timer2,quitflag
 
@@ -547,6 +548,7 @@ DrawVectors_BPV:
 	bsr.w	drawline_f_BPV
 	movem.l	(sp)+,d0-d5
 	lea	40(a5),a0
+	move.w	#2,DrawLineNumPlanes(a4)
 	bsr	DrawLine_MinMax
 	dbf	d7,.drawloop
 	rts
@@ -1087,7 +1089,8 @@ DrawSurfaces_Wille:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
-	bsr.w	drawline_Wille
+	move.w	#3,DrawLineNumPlanes(a4)
+	bsr.w	DrawLine_MinMax
 .yli1
 	move.w	a5,d0
 	btst	#1,d0
@@ -1099,7 +1102,8 @@ DrawSurfaces_Wille:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
-	bsr.w	drawline_Wille
+	move.w	#3,DrawLineNumPlanes(a4)
+	bsr.w	DrawLine_MinMax
 .yli2
 	move.w	a5,d0
 	btst	#2,d0
@@ -1112,7 +1116,8 @@ DrawSurfaces_Wille:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
-	bsr.w	drawline_Wille
+	move.w	#3,DrawLineNumPlanes(a4)
+	bsr.w	DrawLine_MinMax
 .yli3
 	addq.l	#4,a1
 	dbf	d6,.loop2
@@ -1165,123 +1170,6 @@ FillScreen_Wille:
 	move.l	d0,xadd(a4)
 
 	rts		;-)
-
-
-
-
-***	DrawLine v1.0 by Great J of Red Chrome
-***	Input:	d0=x1, d1=y1, d2=x2, d3=y2, a0=bitplane, a6=custom
-***	Uses:	d4,d5
-
-drawline_Wille:
-	cmp.w	d0,d2
-	bhi.s	.Left2Right
-	bne.s	.MakeLeft2Right
-	cmp.w	d1,d3
-	beq.w	.end
-.MakeLeft2Right
-	exg	d0,d2
-	exg	d1,d3
-.Left2Right
-
-	; d0<d2
-
-	cmp.w	minX(a4),d0
-	bhi.s	.d0_not_MinX
-	move.w	d0,minX(a4)
-.d0_not_MinX
-	cmp.w	maxX(a4),d2
-	blo.s	.d2_not_MaxX
-	move.w	d2,maxX(a4)
-.d2_not_MaxX
-
-	cmp.w	minY(a4),d1
-	bhi.s	.d1_not_MinY
-	move.w	d1,minY(a4)
-.d1_not_MinY
-	cmp.w	maxY(a4),d1
-	blo.s	.d1_not_MaxY
-	move.w	d1,maxY(a4)
-.d1_not_MaxY
-
-	cmp.w	minY(a4),d3
-	bhi.s	.d3_not_MinY
-	move.w	d3,minY(a4)
-.d3_not_MinY
-	cmp.w	maxY(a4),d3
-	blo.s	.d3_not_MaxY
-	move.w	d3,maxY(a4)
-.d3_not_MaxY
-
-	moveq	#0,d4
-	sub.w	d0,d2		; DeltaX	(Left2Right => pakosta posit.)
-	sub.w	d1,d3		; DeltaY
-	bge.s	.Up2Down	; positiivinen => ylhäältä alas
-	neg.w	d3		; negatiivinen => alhaalta ylös
-	moveq	#2,d4		; oktantti alhaalta ylös -vaastaavaksi
-.Up2Down
-	cmp.w	d2,d3
-	bge.s	.DeltaOk	; d2 = DeltaP, d3 = DeltaS
-	exg	d2,d3
-	addq.w	#1,d4		; oktantti kk:ta vastaavaksi ( nyt |kk| < 1 )
-.DeltaOk
-	add.w	d2,d2		; 2DeltaP
-
-	mulu	#40*3,d1
-
-;	move.w	d1,d5
-;	lsl.w	#3,d1
-;	lsl.w	#5,d5
-;	add.w	d5,d1
-;	ext.l	d1
-
-	move.w	d0,d5
-	asr.w	#3,d0
-	add.w	d0,d1
-	add.l	a0,d1		; d0 = viivan alkuosoite
-
-	move.b	.octant(pc,d4.w),d4
-	and.w	#$f,d5		; d5 = lähtöpikselin tarkka paikka (X)
-	ror.w	#4,d5
-	or.w	#$bea,d5	; mintermi & kanavat
-	swap	d5
-	move.w	d4,d5
-
-	move.w	d3,d4
-	lsl.w	#6,d4
-	add.w	#$42,d4
-
-	WaitB
-
-	move.w	d2,bltbmod(a6)
-	sub.w	d3,d2		; 2DeltaP - DeltaS
-	bge.s	.SignBitOk
-	or.w	#$40,d5		; Set Sign Bit
-.SignBitOk
-	move.w	d2,bltaptl(a6)
-	sub.w	d3,d2		; (2DeltaP - DeltaS) - DeltaS =2(DeltaP-DeltaS)
-	move.w	d2,bltamod(a6)
-	move.l	d1,bltcpth(a6)
-	move.l	d1,bltdpth(a6)
-	move.l	d5,bltcon0(a6)
-	move.w	d4,bltsize(a6)
-
-.end	rts
-
-
-
-;  Line Mode Bit -------+
-;  1 Pixel / Line Bit -+|
-;  3 Octant Bits ----+ ||
-;                    | ||
-.octant		;   OOOPL
-	dc.b	%00000001	; 
-	dc.b	%00010001	; 
-	dc.b	%00000101	; 
-	dc.b	%00011001	; 
-
-
-
 
 Scroller:
 	subq.w	#1,ScrollOdotus(a4)
@@ -1486,6 +1374,7 @@ DrawSurfaces:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#2,DrawLineNumPlanes(a4)
 	bsr.w	DrawLine_MinMax
 	addq.l	#4,a1
 	dbf	d6,.loop2
@@ -1499,6 +1388,7 @@ DrawSurfaces:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#2,DrawLineNumPlanes(a4)
 	bsr.w	DrawLine_MinMax
 
 	addq.l	#4,a1
@@ -1552,6 +1442,7 @@ FillScreen_Line:
 
 ***	DrawLine v1.0 by Great J of Red Chrome
 ***	Input:	d0=x1, d1=y1, d2=x2, d3=y2, a0=bitplane, a6=custom
+***		DrawLineNumPlanes(a4)=number of planes
 ***	Uses:	d4,d5
 DrawLine_MinMax:
 	cmp.w	d0,d2
@@ -1628,13 +1519,11 @@ DrawLine_Left2Right:
 .DeltaOk
 	add.w	d2,d2		; 2DeltaP
 
-	mulu	#40*2,d1
-
-;	move.w	d1,d5
-;	lsl.w	#3,d1
-;	lsl.w	#5,d5
-;	add.w	d5,d1
-;	ext.l	d1
+	move.w	d1,d5		; 40*planes*d1
+	lsl.w	#3,d5
+	lsl.w	#5,d1
+	add.w	d5,d1
+	mulu	DrawLineNumPlanes(a4),d1
 
 	move.w	d0,d5
 	asr.w	#3,d0
@@ -2414,92 +2303,10 @@ DrawVectors_Grid:
 	move.w	(a2)+,d6
 	move.w	(a1,d6.w),d2
 	move.w	2(a1,d6.w),d3
-	bsr	drawline_Grid
+	move.w	#1,DrawLineNumPlanes(a4)
+	bsr	DrawLine
 	dbf	d7,.drawloop
 	rts
-
-
-***	DrawLine v1.0 by Great J of Red Chrome
-***	Input:	d0=x1, d1=y1, d2=x2, d3=y2, a0=bitplane, a6=custom
-***	Uses:	d4,d5
-
-drawline_Grid:
-	cmp.w	d0,d2
-	bhi.s	.Left2Right
-	bne.s	.MakeLeft2Right
-	cmp.w	d1,d3
-	beq.s	.end
-.MakeLeft2Right
-	exg	d0,d2
-	exg	d1,d3
-.Left2Right
-	moveq	#0,d4
-	sub.w	d0,d2		; DeltaX	(Left2Right => pakosta posit.)
-	sub.w	d1,d3		; DeltaY
-	bge.s	.Up2Down	; positiivinen => ylhäältä alas
-	neg.w	d3		; negatiivinen => alhaalta ylös
-	moveq	#2,d4		; oktantti alhaalta ylös -vaastaavaksi
-.Up2Down
-	cmp.w	d2,d3
-	bge.s	.DeltaOk	; d2 = DeltaP, d3 = DeltaS
-	exg	d2,d3
-	addq.w	#1,d4		; oktantti kk:ta vastaavaksi ( nyt |kk| < 1 )
-.DeltaOk
-	add.w	d2,d2		; 2DeltaP
-
-;	mulu	#40,d1
-
-	move.w	d1,d5
-	lsl.w	#3,d1
-	lsl.w	#5,d5
-	add.w	d5,d1
-	ext.l	d1
-
-	move.w	d0,d5
-	asr.w	#3,d0
-	add.w	d0,d1
-	add.l	a0,d1		; d0 = viivan alkuosoite
-
-	move.b	.octant(pc,d4.w),d4
-	and.w	#$f,d5		; d5 = lähtöpikselin tarkka paikka (X)
-	ror.w	#4,d5
-	or.w	#$bea,d5	; mintermi & kanavat
-	swap	d5
-	move.w	d4,d5
-
-	move.w	d3,d4
-	lsl.w	#6,d4
-	add.w	#$42,d4
-
-	WaitB
-
-	move.w	d2,bltbmod(a6)
-	sub.w	d3,d2		; 2DeltaP - DeltaS
-	bge.s	.SignBitOk
-	or.w	#$40,d5		; Set Sign Bit
-.SignBitOk
-	move.w	d2,bltaptl(a6)
-	sub.w	d3,d2		; (2DeltaP - DeltaS) - DeltaS =2(DeltaP-DeltaS)
-	move.w	d2,bltamod(a6)
-	move.l	d1,bltcpth(a6)
-	move.l	d1,bltdpth(a6)
-	move.l	d5,bltcon0(a6)
-	move.w	d4,bltsize(a6)
-
-.end	rts
-
-
-
-;  Line Mode Bit -------+
-;  1 Pixel / Line Bit -+|
-;  3 Octant Bits ----+ ||
-;                    | ||
-.octant		;   OOOPL
-	dc.b	%00000001	; 
-	dc.b	%00010001	; 
-	dc.b	%00000101	; 
-	dc.b	%00011001	; 
-
 
 ***	set the orders for actives and buffer
 ***	'väännä se rautalangasta' tyyliä käytti menestyksellisesti J'boy
