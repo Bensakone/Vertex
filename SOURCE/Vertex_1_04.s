@@ -62,9 +62,14 @@
 	include "MGmacros.i"
 
 ;;; Debug options
-RASTERTIME	= 0		; show rastertime in every part
 DEBUG		= 0		; go to next part with left/right mouse button
 RMOUSE_PAUSE	= 0		; right mouse button pauses (not with DEBUG!)
+
+RASTERTIME_DISPLAY:	MACRO		; define RASTERTIME to show it
+	IFD	RASTERTIME
+	move.w	#$005,c0+custom
+	ENDIF
+	ENDM
 
 ;;; BSS Stack (tm) Variable Definitions
 	dl	VBR
@@ -512,9 +517,8 @@ vbi_BPV:
 	move.w	#-1,quitflag(a4)	; TÄSSÄ TÄSSÄ TÄSSÄ TÄSSÄ!!!!!!
 .overandout
 
-	IF	RASTERTIME	= 1
-	move.w	#$005,c0+custom
-	ENDC
+	RASTERTIME_DISPLAY
+
 .rmpause
 .end	move.w	#$20,intreq+custom
 	movem.l (sp)+,d0-a6
@@ -772,9 +776,8 @@ vbi_Line:
 
 	bsr	Scroller
 
-	IF	RASTERTIME = 1
-	move.w	#$005,c0(a6)		; rasteriaika 	( <= terävää! ;-)
-	ENDC
+	RASTERTIME_DISPLAY
+
 .rmpause
 
 .loppu
@@ -896,9 +899,7 @@ vbi_Wille:
 
 	bsr	Scroller
 
-	IF	RASTERTIME = 1
-	move.w	#$005,c0(a6)
-	ENDC
+	RASTERTIME_DISPLAY
 .rmpause
 
 .loppu
@@ -1931,9 +1932,7 @@ vbi_Vertex:
 
 	bsr	Fill
 
-	IF	RASTERTIME = 1
-	move.w	#$005,c0+custom
-	ENDC
+	RASTERTIME_DISPLAY
 .rmpause
 
 	move.w	#$20,intreq+custom
@@ -2100,9 +2099,7 @@ vbi_Grid:
 	move.w	#-1,quitflag(a4)
 .end
 
-	IF	RASTERTIME	= 1
-	move.w	#$005,c0+custom
-	ENDC
+	RASTERTIME_DISPLAY
 .rmpause
 
 	move.w	#$20,intreq+custom
@@ -2456,9 +2453,7 @@ vbi_Field:
 	move.w	#-1,quitflag(a4)
 .end
 
-	IF	RASTERTIME = 1
-	move.w	#$005,c0+custom
-	ENDC
+	RASTERTIME_DISPLAY
 .rmpause
 
 .loppu	move.w	#$20,intreq+custom
@@ -3020,13 +3015,8 @@ vbi_FillIcos:
 	blt.s	.yli2
 	move.w	#-1100,Distance(a4)
 .yli2
-	
-	IF	RASTERTIME = 1
-	move.w	#$005,c0(a6)	; Ehdotus. Lisätään yhden framen kesto
-				; 2/50 sekuntiin. Näin me kaikki koodarit
-				; saamme hienompia demoja aikaiseksi ja
-				; ne pyörivät edelleen yhdessä framessa...
-	ENDC
+
+	RASTERTIME_DISPLAY
 .rmpause
 
 	move.w	#$20,intreq(a6)
@@ -3376,10 +3366,7 @@ vbi_Writer:
 
 	bsr	Writer
 
-
-	IF	RASTERTIME = 1
-	move.w	#$005,c0(a6)	; raster tid
-	ENDC
+	RASTERTIME_DISPLAY
 .rmpause
 
 	move.w	#$20,intreq(a6)
@@ -3815,9 +3802,8 @@ vbi_Slime:
 	bsr	FadeOut
 
 .loppu
-	IF	RASTERTIME = 1
-	move.w	#$005,c0(a6)	; rasteriaika
-	ENDC
+
+	RASTERTIME_DISPLAY
 .rmpause
 
 	move.w	#$20,intreq(a6)
@@ -4131,9 +4117,8 @@ vbi_Dick:
 	move.w	#-1,quitflag(a4)
 
 .ok1
-	IF	RASTERTIME = 1
-	move.w	#$f00,c0+custom
-	ENDC
+
+	RASTERTIME_DISPLAY
 .rmpause
 
 	move.w	#$20,intreq(a6)
@@ -4457,10 +4442,7 @@ vbi_Glenz:
 .no_anus				; joo, varsinkin stack-jutut.
 .endp					; (push & pull)
 
-	IF	RASTERTIME = 1
-	move.w	#$005,c0(a6)		; rasteriajasta puheen ollen...
-	ENDC				; on alle kahdeksanvuotiaiden
-					; logout-aika.
+	RASTERTIME_DISPLAY
 .rmpause
 
 	move.w	#$20,intreq(a6)
