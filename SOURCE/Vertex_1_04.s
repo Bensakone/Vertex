@@ -545,6 +545,7 @@ DrawVectors_BPV:
 	move.w	(a1),d2
 	move.w	2(a1),d3
 	movem.l	d0-d5,-(sp)
+	move.w	#2,DrawLineNumPlanes(a4)
 	bsr.w	drawline_f_BPV
 	movem.l	(sp)+,d0-d5
 	lea	40(a5),a0
@@ -568,15 +569,22 @@ drawline_f_BPV:
 	sub.w	d1,d4
 	add.w	d4,d4
 	sub.w	d0,d2
-	bge.s	.x2gXangle
+	bge.s	.x2gx1
 	neg.w	d2
 	addq.w	#2,d5
-.x2gXangle	cmp.w	d4,d2
+.x2gx1
+	cmp.w	d4,d2
 	blo.s	.allok
 	subq.w	#1,d3
 .allok
 	sub.w	d1,d3
-	mulu	#40*2,d1
+
+	move.w	d1,d4		; 40*planes*d1
+	lsl.w	#3,d4
+	lsl.w	#5,d1
+	add.w	d4,d1
+	mulu	DrawLineNumPlanes(a4),d1
+
 	move.w	d0,d4
 	asr.w	#3,d4
 	add.w	d4,d1
@@ -588,7 +596,7 @@ drawline_f_BPV:
 	exg	d2,d3
 	addq.w	#1,d5
 .dygdx
-	move.b	.oktantit_f(pc,d5),d5
+	move.b	.oktantit(pc,d5),d5
 	add.w	d2,d2
 	and.w	#$000f,d0
 	ror.w	#4,d0
@@ -600,7 +608,8 @@ drawline_f_BPV:
 	sub.w	d3,d2
 	bge.s	.signnl
 	or.b	#%01000000,d5
-.signnl	move.w	d2,bltaptl(a6)
+.signnl
+	move.w	d2,bltaptl(a6)
 	sub.w	d3,d2
 	move.w	d2,bltamod(a6)
 	move.w	d0,bltcon0(a6)
@@ -612,7 +621,7 @@ drawline_f_BPV:
 	move.w	d3,bltsize(a6)
 	rts
 
-.oktantit_f:
+.oktantit:
 	dc.b 0+3
 	dc.b 16+3
 	dc.b 8+3
@@ -1955,6 +1964,7 @@ drawloop:
 	add.w	(a2)+,a1
 	move.w	(a1),d2
 	move.w	2(a1),d3
+	move.w	#1,DrawLineNumPlanes(a4)
 	bsr	drawline1
 	dbf	d7,drawloop
 	rts
@@ -1965,14 +1975,14 @@ drawloop:
 ;	filled
 drawline1:
 	cmp.w	d1,d3
-	bhi.w	.next1
+	bhi.s	.next1
 	exg	d0,d2
 	exg	d1,d3
-.next1:
+.next1
 	cmp.w	d3,d1
 	bne.s	.next2
 	rts
-.next2:
+.next2
 	moveq	#0,d5
 	move.w	d3,d4
 	sub.w	d1,d4
@@ -1981,12 +1991,19 @@ drawline1:
 	bge.s	.x2gx1
 	neg.w	d2
 	addq.w	#2,d5
-.x2gx1:	cmp.w	d4,d2
+.x2gx1
+	cmp.w	d4,d2
 	blo.s	.allok
 	subq.w	#1,d3
-.allok:
+.allok
 	sub.w	d1,d3
-	mulu	#40,d1
+
+	move.w	d1,d4		; 40*planes*d1
+	lsl.w	#3,d4
+	lsl.w	#5,d1
+	add.w	d4,d1
+	mulu	DrawLineNumPlanes(a4),d1
+
 	move.w	d0,d4
 	asr.w	#3,d4
 	add.w	d4,d1
@@ -1997,7 +2014,7 @@ drawline1:
 	bge.s	.dygdx
 	exg	d2,d3
 	addq.w	#1,d5
-.dygdx:
+.dygdx
 	move.b	.oktantit(pc,d5),d5
 	add.w	d2,d2
 	and.w	#$000f,d0
@@ -2010,7 +2027,7 @@ drawline1:
 	sub.w	d3,d2
 	bge.s	.signnl
 	or.b	#%01000000,d5
-.signnl:
+.signnl
 	move.w	d2,bltaptl(a6)
 	sub.w	d3,d2
 	move.w	d2,bltamod(a6)
@@ -3170,6 +3187,7 @@ DrawSurfaces_FWille:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_FillIcos
 .yli1
 	move.w	a5,d0
@@ -3182,6 +3200,7 @@ DrawSurfaces_FWille:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_FillIcos
 .yli2
 	move.w	a5,d0
@@ -3195,6 +3214,7 @@ DrawSurfaces_FWille:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_FillIcos
 .yli3
 	addq.l	#4,a1
@@ -3235,6 +3255,7 @@ DrawSurfaces_FillIcos:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_FillIcos
 .yli1
 	move.w	a5,d0
@@ -3247,6 +3268,7 @@ DrawSurfaces_FillIcos:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_FillIcos
 .yli2
 	addq.l	#4,a1
@@ -3315,7 +3337,7 @@ drawline_FillIcos:
 	bhi.s	.next1
 	exg	d0,d2
 	exg	d1,d3
-.next1:
+.next1
 	cmp.w	minY(a4),d1
 	bhi.s	.eipienempiy
 	move.w	d1,minY(a4)
@@ -3343,7 +3365,7 @@ drawline_FillIcos:
 	cmp.w	d3,d1
 	bne.s	.next2
 	rts
-.next2:
+.next2
 	moveq	#0,d5
 	move.w	d3,d4
 	sub.w	d1,d4
@@ -3352,12 +3374,19 @@ drawline_FillIcos:
 	bge.s	.x2gx1
 	neg.w	d2
 	addq.w	#2,d5
-.x2gx1:	cmp.w	d4,d2
+.x2gx1
+	cmp.w	d4,d2
 	blo.s	.allok
 	subq.w	#1,d3
-.allok:
+.allok
 	sub.w	d1,d3
-	mulu	#40*3,d1
+
+	move.w	d1,d4		; 40*planes*d1
+	lsl.w	#3,d4
+	lsl.w	#5,d1
+	add.w	d4,d1
+	mulu	DrawLineNumPlanes(a4),d1
+
 	move.w	d0,d4
 	asr.w	#3,d4
 	add.w	d4,d1
@@ -3368,7 +3397,7 @@ drawline_FillIcos:
 	bge.s	.dygdx
 	exg	d2,d3
 	addq.w	#1,d5
-.dygdx:
+.dygdx
 	move.b	.oktantit(pc,d5),d5
 	add.w	d2,d2
 	and.w	#$000f,d0
@@ -3381,7 +3410,7 @@ drawline_FillIcos:
 	sub.w	d3,d2
 	bge.s	.signnl
 	or.b	#%01000000,d5
-.signnl:
+.signnl
 	move.w	d2,bltaptl(a6)
 	sub.w	d3,d2
 	move.w	d2,bltamod(a6)
@@ -4087,6 +4116,7 @@ DrawSurfaces_Slime:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_FillIcos
 .yli1
 	move.w	a5,d0
@@ -4099,6 +4129,7 @@ DrawSurfaces_Slime:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_FillIcos
 .yli2
 	move.w	a5,d0
@@ -4112,6 +4143,7 @@ DrawSurfaces_Slime:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_FillIcos
 .yli3
 	addq.l	#4,a1
@@ -4672,6 +4704,7 @@ DrawSurfaces_Glenz:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#4,DrawLineNumPlanes(a4)
 	bsr.w	drawline_Glenz
 .yli1
 	move.w	a5,d0
@@ -4685,6 +4718,7 @@ DrawSurfaces_Glenz:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#4,DrawLineNumPlanes(a4)
 	bsr.w	drawline_Glenz
 .yli2
 
@@ -4703,6 +4737,7 @@ DrawSurfaces_Glenz:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#4,DrawLineNumPlanes(a4)
 	bsr.w	drawline_Glenz
 .yli11
 	move.w	a5,d0
@@ -4716,6 +4751,7 @@ DrawSurfaces_Glenz:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#4,DrawLineNumPlanes(a4)
 	bsr.w	drawline_Glenz
 .yli22
 	addq.l	#4,a1
@@ -4783,7 +4819,7 @@ drawline_Glenz:
 	bhi.s	.next1
 	exg	d0,d2
 	exg	d1,d3
-.next1:
+.next1
 	cmp.w	minY(a4),d1
 	bhi.s	.eipienempiy
 	move.w	d1,minY(a4)
@@ -4811,7 +4847,7 @@ drawline_Glenz:
 	cmp.w	d3,d1
 	bne.s	.next2
 	rts
-.next2:
+.next2
 	moveq	#0,d5
 	move.w	d3,d4
 	sub.w	d1,d4
@@ -4820,12 +4856,19 @@ drawline_Glenz:
 	bge.s	.x2gx1
 	neg.w	d2
 	addq.w	#2,d5
-.x2gx1:	cmp.w	d4,d2
+.x2gx1
+	cmp.w	d4,d2
 	blo.s	.allok
 	subq.w	#1,d3
-.allok:
+.allok
 	sub.w	d1,d3
-	mulu	#40*4,d1
+
+	move.w	d1,d4		; 40*planes*d1
+	lsl.w	#3,d4
+	lsl.w	#5,d1
+	add.w	d4,d1
+	mulu	DrawLineNumPlanes(a4),d1
+
 	move.w	d0,d4
 	asr.w	#3,d4
 	add.w	d4,d1
@@ -4836,7 +4879,7 @@ drawline_Glenz:
 	bge.s	.dygdx
 	exg	d2,d3
 	addq.w	#1,d5
-.dygdx:
+.dygdx
 	move.b	.oktantit(pc,d5),d5
 	add.w	d2,d2
 	and.w	#$000f,d0
@@ -4849,7 +4892,7 @@ drawline_Glenz:
 	sub.w	d3,d2
 	bge.s	.signnl
 	or.b	#%01000000,d5
-.signnl:
+.signnl
 	move.w	d2,bltaptl(a6)
 	sub.w	d3,d2
 	move.w	d2,bltamod(a6)
@@ -5255,6 +5298,7 @@ DrawSurfaces_RGB_Plates:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_RGB_Plates
 .yli1
 	move.w	a5,d0
@@ -5267,6 +5311,7 @@ DrawSurfaces_RGB_Plates:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_RGB_Plates
 .yli2
 	move.w	a5,d0
@@ -5280,6 +5325,7 @@ DrawSurfaces_RGB_Plates:
 	move.w	2(a1),d3			; lisäys, josta löytyy Rx2
 	move.w	(a2,d3.w),d2		; Rx2
 	move.w	2(a2,d3.w),d3		; Ry2
+	move.w	#3,DrawLineNumPlanes(a4)
 	bsr.w	drawline_RGB_Plates
 .yli3
 	addq.l	#4,a1
@@ -5352,8 +5398,8 @@ drawline_RGB_Plates:
 	cmp.w	d1,d3
 	bhi.s	.next1
 	exg	d0,d2
-	exg	d1,d3	; ylhäältä alas
-.next1:
+	exg	d1,d3
+.next1
 	cmp.w	minY(a4),d1
 	bhi.s	.eipienempiy
 	move.w	d1,minY(a4)
@@ -5381,7 +5427,7 @@ drawline_RGB_Plates:
 	cmp.w	d3,d1
 	bne.s	.next2
 	rts
-.next2:
+.next2
 	moveq	#0,d5
 	move.w	d3,d4
 	sub.w	d1,d4
@@ -5390,12 +5436,19 @@ drawline_RGB_Plates:
 	bge.s	.x2gx1
 	neg.w	d2
 	addq.w	#2,d5
-.x2gx1:	cmp.w	d4,d2
+.x2gx1
+	cmp.w	d4,d2
 	blo.s	.allok
 	subq.w	#1,d3
-.allok:
+.allok
 	sub.w	d1,d3
-	mulu	#120,d1
+
+	move.w	d1,d4		; 40*planes*d1
+	lsl.w	#3,d4
+	lsl.w	#5,d1
+	add.w	d4,d1
+	mulu	DrawLineNumPlanes(a4),d1
+
 	move.w	d0,d4
 	asr.w	#3,d4
 	add.w	d4,d1
@@ -5406,7 +5459,7 @@ drawline_RGB_Plates:
 	bge.s	.dygdx
 	exg	d2,d3
 	addq.w	#1,d5
-.dygdx:
+.dygdx
 	move.b	.oktantit(pc,d5),d5
 	add.w	d2,d2
 	and.w	#$000f,d0
@@ -5419,7 +5472,7 @@ drawline_RGB_Plates:
 	sub.w	d3,d2
 	bge.s	.signnl
 	or.b	#%01000000,d5
-.signnl:
+.signnl
 	move.w	d2,bltaptl(a6)
 	sub.w	d3,d2
 	move.w	d2,bltamod(a6)
