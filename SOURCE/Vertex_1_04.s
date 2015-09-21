@@ -167,6 +167,10 @@ Main:	bra.s	.ver
 
 	move.w	#%1110000000000000,intena(a6)
 
+	IFD	PART
+	move.w	#PART,Part(a4)
+	ENDC
+
 ;;; Run all the parts.
 .parts:
 	;; The rules for each part subroutine:
