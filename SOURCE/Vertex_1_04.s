@@ -1487,10 +1487,6 @@ DrawLine_Left2Right:
 	swap	d5
 	move.w	d4,d5
 
-	move.w	d3,d4
-	lsl.w	#6,d4
-	add.w	#$42,d4
-
 	move.w	d2,d0		; 2DeltaP for BLTBMOD
 	swap	d0
 
@@ -1502,6 +1498,9 @@ DrawLine_Left2Right:
 	move.w	d2,d0
 	sub.w	d3,d0		; (2DeltaP - DeltaS) - DeltaS = 2(DeltaP-DeltaS)
 
+	lsl.w	#6,d3
+	add.w	#$42,d3
+
 	WaitB
 
 	move.w	d2,bltaptl(a6)	; 2DeltaP - DeltaS
@@ -1509,7 +1508,7 @@ DrawLine_Left2Right:
 	move.l	d1,bltcpth(a6)
 	move.l	d1,bltdpth(a6)
 	move.l	d5,bltcon0(a6)
-	move.w	d4,bltsize(a6)
+	move.w	d3,bltsize(a6)
 
 	rts
 
