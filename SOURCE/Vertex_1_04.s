@@ -547,7 +547,7 @@ DrawVectors_BPV:
 	bsr.w	drawline_f_BPV
 	movem.l	(sp)+,d0-d5
 	lea	40(a5),a0
-	bsr	DrawLine
+	bsr	DrawLine_MinMax
 	dbf	d7,.drawloop
 	rts
 
@@ -1486,7 +1486,7 @@ DrawSurfaces:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
-	bsr.w	DrawLine
+	bsr.w	DrawLine_MinMax
 	addq.l	#4,a1
 	dbf	d6,.loop2
 	bra.s	.jump1
@@ -1499,7 +1499,7 @@ DrawSurfaces:
 	move.w	2(a1),d3
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
-	bsr.w	DrawLine
+	bsr.w	DrawLine_MinMax
 
 	addq.l	#4,a1
 	dbf	d6,.DoNotDraw
@@ -1553,20 +1553,19 @@ FillScreen_Line:
 ***	DrawLine v1.0 by Great J of Red Chrome
 ***	Input:	d0=x1, d1=y1, d2=x2, d3=y2, a0=bitplane, a6=custom
 ***	Uses:	d4,d5
-
-DrawLine:
+DrawLine_MinMax:
 	cmp.w	d0,d2
 	bhi.s	.Left2Right
 	bne.s	.MakeLeft2Right
 	cmp.w	d1,d3
-	beq.w	.end
+	bne.s	.MakeLeft2Right
+	rts
 .MakeLeft2Right
 	exg	d0,d2
 	exg	d1,d3
 .Left2Right
 
-	; d0<d2
-
+	;; d0 < d2
 	cmp.w	minX(a4),d0
 	bhi.s	.d0_not_MinX
 	move.w	d0,minX(a4)
@@ -1576,10 +1575,10 @@ DrawLine:
 	move.w	d2,maxX(a4)
 .d2_not_MaxX
 
-	cmp.w	minY(a4),d1
-	bhi.s	.d1_not_MinY
-	move.w	d1,minY(a4)
-.d1_not_MinY
+	cmp.w	d1,d3
+	bhi.s	.d1_smaller
+
+	;; d1 > d3
 	cmp.w	maxY(a4),d1
 	blo.s	.d1_not_MaxY
 	move.w	d1,maxY(a4)
@@ -1589,11 +1588,32 @@ DrawLine:
 	bhi.s	.d3_not_MinY
 	move.w	d3,minY(a4)
 .d3_not_MinY
-	cmp.w	maxY(a4),d3
-	blo.s	.d3_not_MaxY
-	move.w	d3,maxY(a4)
-.d3_not_MaxY
+	bra.s	DrawLine_Left2Right
 
+	;; d1 < d3
+.d1_smaller
+	cmp.w	minY(a4),d1
+	bhi.s	.d1_not_MinY
+	move.w	d1,minY(a4)
+.d1_not_MinY
+
+	cmp.w	maxY(a4),d3
+	blo.s	DrawLine_Left2Right
+	move.w	d3,maxY(a4)
+	bra.s	DrawLine_Left2Right
+
+DrawLine:
+	cmp.w	d0,d2
+	bhi.s	DrawLine_Left2Right
+	bne.s	.MakeLeft2Right
+	cmp.w	d1,d3
+	bne.s	.MakeLeft2Right
+	rts
+.MakeLeft2Right
+	exg	d0,d2
+	exg	d1,d3
+
+DrawLine_Left2Right:
 	moveq	#0,d4
 	sub.w	d0,d2		; DeltaX	(Left2Right => pakosta posit.)
 	sub.w	d1,d3		; DeltaY
@@ -1647,7 +1667,7 @@ DrawLine:
 	move.l	d5,bltcon0(a6)
 	move.w	d4,bltsize(a6)
 
-.end	rts
+	rts
 
 
 
