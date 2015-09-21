@@ -1016,8 +1016,8 @@ DrawSurfaces_Wille:
 	move.w	d0,a5
 
 .loop2:	move.l	Buffer(a4),a0
-	move.w	a5,d0
-	btst	#0,d0
+	move.w	a5,d4
+	btst	#0,d4
 	beq.s	.yli1
 	move.w	(a1),d3
 	move.w	(a2,d3.w),d0
@@ -1029,8 +1029,8 @@ DrawSurfaces_Wille:
 	bsr	SetMinMax
 	bsr.w	DrawLine
 .yli1
-	move.w	a5,d0
-	btst	#1,d0
+	move.w	a5,d4
+	btst	#1,d4
 	beq.s	.yli2
 	add.l	#40,a0
 	move.w	(a1),d3
@@ -1043,8 +1043,8 @@ DrawSurfaces_Wille:
 	bsr	SetMinMax
 	bsr.w	DrawLine
 .yli2
-	move.w	a5,d0
-	btst	#2,d0
+	move.w	a5,d4
+	btst	#2,d4
 	beq.s	.yli3
 	move.l	Buffer(a4),a0
 	add.l	#80,a0
