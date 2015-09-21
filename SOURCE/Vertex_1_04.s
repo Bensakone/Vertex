@@ -550,7 +550,8 @@ DrawVectors_BPV:
 	movem.l	(sp)+,d0-d5
 	lea	40(a5),a0
 	move.w	#2,DrawLineNumPlanes(a4)
-	bsr	DrawLine_MinMax
+	bsr	SetMinMax
+	bsr	DrawLine
 	dbf	d7,.drawloop
 	rts
 
@@ -1025,7 +1026,8 @@ DrawSurfaces_Wille:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine
 .yli1
 	move.w	a5,d0
 	btst	#1,d0
@@ -1038,7 +1040,8 @@ DrawSurfaces_Wille:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine
 .yli2
 	move.w	a5,d0
 	btst	#2,d0
@@ -1052,7 +1055,8 @@ DrawSurfaces_Wille:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine
 .yli3
 	addq.l	#4,a1
 	dbf	d6,.loop2
@@ -1310,7 +1314,8 @@ DrawSurfaces:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#2,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine
 	addq.l	#4,a1
 	dbf	d6,.loop2
 	bra.s	.jump1
@@ -1324,7 +1329,8 @@ DrawSurfaces:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#2,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine
 
 	addq.l	#4,a1
 	dbf	d6,.DoNotDraw
@@ -1374,24 +1380,26 @@ FillScreen_Line:
 
 	rts		;-)
 
-
-***	DrawLine v1.0 by Great J of Red Chrome
-***	Input:	d0=x1, d1=y1, d2=x2, d3=y2, a0=bitplane, a6=custom
-***		DrawLineNumPlanes(a4)=number of planes
-***	Uses:	d4,d5
-DrawLine_MinMax:
+;;; get min/max
+;;; d0=x1, d1=y1, d2=x2, d3=y2
+SetMinMax:
+	;; X
 	cmp.w	d0,d2
-	bhi.s	.Left2Right
-	bne.s	.MakeLeft2Right
-	cmp.w	d1,d3
-	bne.s	.MakeLeft2Right
-	rts
-.MakeLeft2Right
-	exg	d0,d2
-	exg	d1,d3
-.Left2Right
+	bhi.s	.d0_smaller
+
+	;; d2 < d0
+	cmp.w	minX(a4),d2
+	bhi.s	.d2_not_MinX
+	move.w	d2,minX(a4)
+.d2_not_MinX
+	cmp.w	maxX(a4),d0
+	blo.s	.d0_not_MaxX
+	move.w	d0,maxX(a4)
+.d0_not_MaxX
+	bra.s	.vertical
 
 	;; d0 < d2
+.d0_smaller
 	cmp.w	minX(a4),d0
 	bhi.s	.d0_not_MinX
 	move.w	d0,minX(a4)
@@ -1401,10 +1409,13 @@ DrawLine_MinMax:
 	move.w	d2,maxX(a4)
 .d2_not_MaxX
 
+	;; Y
+.vertical
 	cmp.w	d1,d3
 	bhi.s	.d1_smaller
 
 	;; d1 > d3
+.d1_bigger
 	cmp.w	maxY(a4),d1
 	blo.s	.d1_not_MaxY
 	move.w	d1,maxY(a4)
@@ -1414,7 +1425,7 @@ DrawLine_MinMax:
 	bhi.s	.d3_not_MinY
 	move.w	d3,minY(a4)
 .d3_not_MinY
-	bra.s	DrawLine_Left2Right
+	rts
 
 	;; d1 < d3
 .d1_smaller
@@ -1424,10 +1435,15 @@ DrawLine_MinMax:
 .d1_not_MinY
 
 	cmp.w	maxY(a4),d3
-	blo.s	DrawLine_Left2Right
+	blo.s	.d3_not_MaxY
 	move.w	d3,maxY(a4)
-	bra.s	DrawLine_Left2Right
+.d3_not_MaxY
+	rts
 
+***	DrawLine v1.0 by Great J of Red Chrome
+***	Input:	d0=x1, d1=y1, d2=x2, d3=y2, a0=bitplane, a6=custom
+***		DrawLineNumPlanes(a4)=number of planes
+***	Uses:	d4,d5
 DrawLine:
 	cmp.w	d0,d2
 	bhi.s	DrawLine_Left2Right
@@ -1504,41 +1520,6 @@ DrawLine_Left2Right:
 	dc.b	%00010001	; 
 	dc.b	%00000101	; 
 	dc.b	%00011001	; 
-
-DrawLine_Filled_MinMax:
-	cmp.w	d1,d3
-	bhi.s	.next1
-	exg	d0,d2
-	exg	d1,d3
-.next1
-	cmp.w	minY(a4),d1
-	bhi.s	.eipienempiy
-	move.w	d1,minY(a4)
-.eipienempiy
-	cmp.w	maxY(a4),d3
-	blo.s	.eisuurempiy
-	move.w	d3,maxY(a4)
-.eisuurempiy
-	cmp.w	minX(a4),d0
-	bhi.s	.eipienempix1
-	move.w	d0,minX(a4)
-.eipienempix1
-	cmp.w	minX(a4),d2
-	bhi.s	.eipienempix2
-	move.w	d2,minX(a4)
-.eipienempix2
-	cmp.w	maxX(a4),d0
-	blo.s	.eisuurempix1
-	move.w	d0,maxX(a4)
-.eisuurempix1
-	cmp.w	maxX(a4),d2
-	blo.s	.eisuurempix2
-	move.w	d2,maxX(a4)
-.eisuurempix2
-	cmp.w	d3,d1
-	bne.s	DrawLine_Filled_Top2Bottom
-	rts
-.next2
 
 DrawLine_Filled:
 	cmp.w	d1,d3
@@ -3143,7 +3124,8 @@ DrawSurfaces_FWille:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli1
 	move.w	a5,d0
 	btst	#1,d0
@@ -3156,7 +3138,8 @@ DrawSurfaces_FWille:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli2
 	move.w	a5,d0
 	btst	#2,d0
@@ -3170,7 +3153,8 @@ DrawSurfaces_FWille:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli3
 	addq.l	#4,a1
 	dbf	d6,.loop2
@@ -3211,7 +3195,8 @@ DrawSurfaces_FillIcos:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli1
 	move.w	a5,d0
 	btst	#1,d0
@@ -3224,7 +3209,8 @@ DrawSurfaces_FillIcos:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli2
 	addq.l	#4,a1
 	dbf	d6,.loop2
@@ -3975,7 +3961,8 @@ DrawSurfaces_Slime:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli1
 	move.w	a5,d0
 	btst	#1,d0
@@ -3988,7 +3975,8 @@ DrawSurfaces_Slime:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli2
 	move.w	a5,d0
 	btst	#2,d0
@@ -4002,7 +3990,8 @@ DrawSurfaces_Slime:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli3
 	addq.l	#4,a1
 	dbf	d6,.loop2
@@ -4563,7 +4552,8 @@ DrawSurfaces_Glenz:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#4,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli1
 	move.w	a5,d0
 	btst	#1,d0
@@ -4577,7 +4567,8 @@ DrawSurfaces_Glenz:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#4,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli2
 
 	addq.l	#4,a1
@@ -4596,7 +4587,8 @@ DrawSurfaces_Glenz:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#4,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli11
 	move.w	a5,d0
 	btst	#1,d0
@@ -4610,7 +4602,8 @@ DrawSurfaces_Glenz:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#4,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli22
 	addq.l	#4,a1
 	dbf	d6,.DoNotDraw
@@ -5058,7 +5051,8 @@ DrawSurfaces_RGB_Plates:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli1
 	move.w	a5,d0
 	btst	#1,d0
@@ -5071,7 +5065,8 @@ DrawSurfaces_RGB_Plates:
 	move.w	(a2,d3.w),d2
 	move.w	2(a2,d3.w),d3
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli2
 	move.w	a5,d0
 	btst	#2,d0
@@ -5085,7 +5080,8 @@ DrawSurfaces_RGB_Plates:
 	move.w	(a2,d3.w),d2		; Rx2
 	move.w	2(a2,d3.w),d3		; Ry2
 	move.w	#3,DrawLineNumPlanes(a4)
-	bsr.w	DrawLine_Filled_MinMax
+	bsr	SetMinMax
+	bsr.w	DrawLine_Filled
 .yli3
 	addq.l	#4,a1
 	dbf	d6,.loop2
