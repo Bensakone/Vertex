@@ -5313,6 +5313,9 @@ FlashCurve:
 	dc.b	15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15
 
 CalcVecPoints:
+	add.w	#320/2,a3	; Rx
+	add.w	#256/2,a5	; Ry
+
 	lea	CosTable(pc),a0
 	lea	SinTable(pc),a1
 
@@ -5403,11 +5406,8 @@ CalcVecPoints:
 	divs	d0,d6		; Lx/(Lz+distance)
 	divs	d0,d1		; Ly/(Lz+distance)
 
-	add.w	#320/2,d6	; Rx
-	add.w	#256/2,d1	; Ry
-
-	add.w	a3,d6
-	add.w	a5,d1
+	add.w	a3,d6		; Rx
+	add.w	a5,d1		; Ry
 
 	move.w	d6,(a1)+
 	move.w	d1,(a1)+
@@ -5416,6 +5416,9 @@ CalcVecPoints:
 	rts
 
 CalcVecPoints8:
+	add.w	#320/2,a3	; Rx
+	add.w	#256/2,a5	; Ry
+
 	lea	CosTable(pc),a0
 	lea	SinTable(pc),a1
 
@@ -5506,11 +5509,8 @@ CalcVecPoints8:
 	divs	d0,d6		; Lx/(Lz+distance)
 	divs	d0,d1		; Ly/(Lz+distance)
 
-	add.w	#320/2,d6	; Rx
-	add.w	#256/2,d1	; Ry
-
-	add.w	a3,d6
-	add.w	a5,d1
+	add.w	a3,d6		; Rx
+	add.w	a5,d1		; Ry
 
 	move.w	d6,(a1)+
 	move.w	d1,(a1)+
@@ -5521,6 +5521,9 @@ CalcVecPoints8:
 CalcVecPoints_Wille:
 	move.l	a6,-(sp)
 	lea	TempZTable,a6
+
+	add.w	#320/2,a3	; Rx
+	add.w	#256/2,a5	; Ry
 
 	lea	CosTable(pc),a0
 	lea	SinTable(pc),a1
@@ -5616,11 +5619,8 @@ CalcVecPoints_Wille:
 	divs	d0,d6		; Lx/(Lz+distance)
 	divs	d0,d1		; Ly/(Lz+distance)
 
-	add.w	#320/2,d6	; Rx
-	add.w	#256/2,d1	; Ry
-
-	add.w	a3,d6
-	add.w	a5,d1
+	add.w	a3,d6		; Rx
+	add.w	a5,d1		; Ry
 
 	move.w	d6,(a1)+
 	move.w	d1,(a1)+
