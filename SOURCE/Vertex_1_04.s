@@ -5420,171 +5420,216 @@ CalcVecPoints8:
 	lea	SinTable(pc),a1
 
 	move.w	Xangle(a4),d0
-	move.w	(a0,d0.w),Xcos(a4)
-	move.w	(a1,d0.w),Xsin(a4)
+	move.w	(a1,d0.w),d3
+	swap	d3
+	move.w	(a0,d0.w),d3	; d3 = Xsin | Xcos
 
 	move.w	Yangle(a4),d0
-	move.w	(a0,d0.w),Ycos(a4)
-	move.w	(a1,d0.w),Ysin(a4)
+	move.w	(a1,d0.w),d4
+	swap	d4
+	move.w	(a0,d0.w),d4	; d4 = Ysin | Ycos
 
 	move.w	Zangle(a4),d0
-	move.w	(a0,d0.w),Zcos(a4)
-	move.w	(a1,d0.w),Zsin(a4)
+	move.w	(a1,d0.w),d5
+	swap	d5
+	move.w	(a0,d0.w),d5	; d5 = Zsin | Zcos
 
 	move.l	ObjCoords(a4),a0
 	lea	TempCoordsTable,a1
 	move.w	Distance(a4),a2
-	moveq	#10,d6
 	move.w	ObjPointNo(a4),d7
 .calc_loop
-	movem.w	(a0)+,d0/d1/d2
-	move.w	d0,d3		; x
-	move.w	d1,d4		; y
-	move.w	d2,d5		; z
+	move.w	(a0)+,d0	; x
+	move.w	d0,d2
+	move.w	(a0)+,d1	; y
+	move.w	d1,d6
 
-	muls	Zcos(a4),d0
-	muls	Zsin(a4),d1
+	muls	d5,d0		; Zcos*x
+	swap	d5
+	muls	d5,d1		; Zsin*y
+	swap	d5
 	add.l	d1,d0
-	asr.l	d6,d0		; Vx
+	asr.l	#5,d0
+	asr.l	#5,d0		; Vx = Zcos*x + Zsin*y
 
-	muls	Zcos(a4),d4
-	muls	Zsin(a4),d3
-	sub.l	d3,d4
-	asr.l	d6,d4
-	move.w	d4,d1		; Vy
+	muls	d5,d6		; Zcos*y
+	swap	d5
+	muls	d5,d2		; Zsin*x
+	swap	d5
+	sub.l	d2,d6
+	asr.l	#5,d6
+	asr.l	#5,d6		; Vy = Zcos*y - Zsin*x
+	swap	d0
+	move.w	d6,d0		; d0 = Vx | Vy
 
-	muls	Xcos(a4),d2
-	muls	Xsin(a4),d4
-	sub.l	d4,d2
-	asr.l	d6,d2		; Vz
+	move.w	(a0)+,d2	; z
+	move.w	d2,d1
 
-	move.w	d0,d3
-	move.w	d1,d4
+	muls	d3,d2		; Xcos*z
+	swap	d3
+	muls	d3,d6		; Xsin*Vy
+	swap	d3
+	sub.l	d6,d2
+	asr.l	#5,d2
+	asr.l	#5,d2		; Vz = Xcos*z - Xsin*Vy
 
-	muls	Xcos(a4),d1
-	muls	Xsin(a4),d5
-	add.l	d5,d1		; Ly
+	move.w	d0,d6		; Vy
 
-	move.w	d2,d5
+	muls	d3,d6		; Xcos*Vy
+	swap	d3
+	muls	d3,d1		; Xsin*z
+	swap	d3
+	add.l	d6,d1		; Ly = Xcos*Vy + Xsin*z
 
-	muls	Ycos(a4),d0
-	muls	Ysin(a4),d5
-	sub.l	d5,d0		; Lx
+	move.w	d2,d0
+	swap	d0		; d0 = Vz | Vx
+	move.w	d0,d6
 
-	muls	Ycos(a4),d2
-	muls	Ysin(a4),d3
-	add.l	d3,d2
-	asr.l	#8,d2		; Lz
-	add.w	a2,d2		; + Distance
+	muls	d4,d6		; Ycos*Vx
+	swap	d4
+	muls	d4,d2		; Ysin*Vz
+	swap	d4
+	sub.l	d2,d6		; Lx = Ycos*Vx - Ysin*Vz
 
-	divs	d2,d0
-	divs	d2,d1
+	move.w	d0,d2		; Vx
+	swap	d0		; Vz
 
-	add.w	#320/2,d0	; Rx
+	muls	d4,d0		; Ycos*Vz
+	swap	d4
+	muls	d4,d2		; Ysin*Vx
+	swap	d4
+	add.l	d2,d0
+	;; THE ONLY DIFFERENCE TO CalcVecPoints
+	asr.l	#8,d0		; Lz = Ycos*Vz + Ysin*Vx
+	add.w	a2,d0		; + Distance
+
+	divs	d0,d6		; Lx/(Lz+distance)
+	divs	d0,d1		; Ly/(Lz+distance)
+
+	add.w	#320/2,d6	; Rx
 	add.w	#256/2,d1	; Ry
 
-
-	add.w	a3,d0
+	add.w	a3,d6
 	add.w	a5,d1
 
-
-
-	move.w	d0,(a1)+
+	move.w	d6,(a1)+
 	move.w	d1,(a1)+
 
 	dbf	d7,.calc_loop
 	rts
 
-
-
 CalcVecPoints_Wille:
+	move.l	a6,-(sp)
+	lea	TempZTable,a6
+
 	lea	CosTable(pc),a0
 	lea	SinTable(pc),a1
 
 	move.w	Xangle(a4),d0
-	move.w	(a0,d0.w),Xcos(a4)
-	move.w	(a1,d0.w),Xsin(a4)
+	move.w	(a1,d0.w),d3
+	swap	d3
+	move.w	(a0,d0.w),d3	; d3 = Xsin | Xcos
 
 	move.w	Yangle(a4),d0
-	move.w	(a0,d0.w),Ycos(a4)
-	move.w	(a1,d0.w),Ysin(a4)
+	move.w	(a1,d0.w),d4
+	swap	d4
+	move.w	(a0,d0.w),d4	; d4 = Ysin | Ycos
 
 	move.w	Zangle(a4),d0
-	move.w	(a0,d0.w),Zcos(a4)
-	move.w	(a1,d0.w),Zsin(a4)
+	move.w	(a1,d0.w),d5
+	swap	d5
+	move.w	(a0,d0.w),d5	; d5 = Zsin | Zcos
 
-	lea	TempZTable,a6
 	move.l	ObjCoords(a4),a0
 	lea	TempCoordsTable,a1
 	move.w	Distance(a4),a2
-	moveq	#10,d6
 	move.w	ObjPointNo(a4),d7
 .calc_loop
-	movem.w	(a0)+,d0/d1/d2
-	move.w	d0,d3		; x
-	move.w	d1,d4		; y
-	move.w	d2,d5		; z
+	move.w	(a0)+,d0	; x
+	move.w	d0,d2
+	move.w	(a0)+,d1	; y
+	move.w	d1,d6
 
-	muls	Zcos(a4),d0
-	muls	Zsin(a4),d1
+	muls	d5,d0		; Zcos*x
+	swap	d5
+	muls	d5,d1		; Zsin*y
+	swap	d5
 	add.l	d1,d0
-	asr.l	d6,d0		; Vx
+	asr.l	#5,d0
+	asr.l	#5,d0		; Vx = Zcos*x + Zsin*y
 
-	muls	Zcos(a4),d4
-	muls	Zsin(a4),d3
-	sub.l	d3,d4
-	asr.l	d6,d4
-	move.w	d4,d1		; Vy
+	muls	d5,d6		; Zcos*y
+	swap	d5
+	muls	d5,d2		; Zsin*x
+	swap	d5
+	sub.l	d2,d6
+	asr.l	#5,d6
+	asr.l	#5,d6		; Vy = Zcos*y - Zsin*x
+	swap	d0
+	move.w	d6,d0		; d0 = Vx | Vy
 
-	muls	Xcos(a4),d2
-	muls	Xsin(a4),d4
-	sub.l	d4,d2
-	asr.l	d6,d2		; Vz
+	move.w	(a0)+,d2	; z
+	move.w	d2,d1
 
-	move.w	d0,d3
-	move.w	d1,d4
+	muls	d3,d2		; Xcos*z
+	swap	d3
+	muls	d3,d6		; Xsin*Vy
+	swap	d3
+	sub.l	d6,d2
+	asr.l	#5,d2
+	asr.l	#5,d2		; Vz = Xcos*z - Xsin*Vy
 
-	muls	Xcos(a4),d1
-	muls	Xsin(a4),d5
-	add.l	d5,d1		; Ly
+	move.w	d0,d6		; Vy
 
-	move.w	d2,d5
+	muls	d3,d6		; Xcos*Vy
+	swap	d3
+	muls	d3,d1		; Xsin*z
+	swap	d3
+	add.l	d6,d1		; Ly = Xcos*Vy + Xsin*z
 
-	muls	Ycos(a4),d0
-	muls	Ysin(a4),d5
-	sub.l	d5,d0		; Lx
+	move.w	d2,d0
+	swap	d0		; d0 = Vz | Vx
+	move.w	d0,d6
 
-	muls	Ycos(a4),d2
-	muls	Ysin(a4),d3
-	add.l	d3,d2
-	asr.l	d6,d2		; Lz
+	muls	d4,d6		; Ycos*Vx
+	swap	d4
+	muls	d4,d2		; Ysin*Vz
+	swap	d4
+	sub.l	d2,d6		; Lx = Ycos*Vx - Ysin*Vz
 
-	move.w	d2,(a6)+	; z-arvo talteen
+	move.w	d0,d2		; Vx
+	swap	d0		; Vz
 
-	add.w	a2,d2		; + Distance
+	muls	d4,d0		; Ycos*Vz
+	swap	d4
+	muls	d4,d2		; Ysin*Vx
+	swap	d4
+	add.l	d2,d0
+	asr.l	#5,d0
+	asr.l	#5,d0		; Lz = Ycos*Vz + Ysin*Vx
 
-	divs	d2,d0
-	divs	d2,d1
+	;; THE ONLY DIFFERENCE TO CalcVecPoints
+	move.w	d0,(a6)+	; Store Lz
 
-	add.w	#320/2,d0	; Rx
+	add.w	a2,d0		; + Distance
+
+	divs	d0,d6		; Lx/(Lz+distance)
+	divs	d0,d1		; Ly/(Lz+distance)
+
+	add.w	#320/2,d6	; Rx
 	add.w	#256/2,d1	; Ry
 
+	add.w	a3,d6
+	add.w	a5,d1
 
-	add.w	a3,d0		; objectin liikutus x
-	add.w	a5,d1		; objectin liikutus y
-
-	move.w	d0,(a1)+
+	move.w	d6,(a1)+
 	move.w	d1,(a1)+
 
 	dbf	d7,.calc_loop
 
-	lea	custom,a6	
+	move.l	(sp)+,a6
 
 	rts
-
-
-
-
 
 
 ***************************************************************************
