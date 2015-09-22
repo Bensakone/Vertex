@@ -5,6 +5,14 @@ ASFLAGS=-IINCLUDE -IEXTERN -ISND -ldots -kick1hunks -Fhunk
 LDFLAGS=-bamigahunk
 OBJS=SOURCE/Vertex_1_04.o SOURCE/nt_replay.o
 
+# Debugging options. For example, 'make PART=4 RASTERTIME=1'
+ifdef PART
+	ASFLAGS+=-DPART=$(PART)
+endif
+ifdef RASTERTIME
+	ASFLAGS+=-DRASTERTIME=$(RASTERTIME)
+endif
+
 %.o: %.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
